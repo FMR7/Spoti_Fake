@@ -1,5 +1,6 @@
 package spotifake;
 
+import Dao.Dao_canciones;
 import Pojos.Cancion;
 import java.io.File;
 import java.nio.file.Paths;
@@ -56,8 +57,11 @@ public class gui extends javax.swing.JFrame {
             jButton4.setBorderPainted(false);
             jButton4.setIcon((ImageIcon) im.ini("unmute.png"));
             
-            db db_con = new db();
-            List <Cancion> c = db_con.get_canciones();
+            //db db_con = new db();
+            //List <Cancion> c = db_con.get_canciones();
+            //List <Cancion> c = db_con.get_canciones_disco("Disco1");
+            Dao_canciones d_c = new Dao_canciones();
+            d_c.fill_song_names();
             
         } catch (Exception ex) {
             System.out.println("WARNING CAN'T LOAD RESOURCES");
@@ -139,6 +143,11 @@ public class gui extends javax.swing.JFrame {
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTree1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTree1);
 
         jButton1.setMaximumSize(new java.awt.Dimension(70, 70));
@@ -195,6 +204,11 @@ public class gui extends javax.swing.JFrame {
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField1.setText("Search...");
         jTextField1.setToolTipText("");
+        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextField1MouseClicked(evt);
+            }
+        });
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -358,6 +372,7 @@ public class gui extends javax.swing.JFrame {
     public void play(){
         if(!"".equals(curr_song)){
            mp.play();
+           jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
         }
         else{
             jToggleButton1.doClick();
@@ -377,6 +392,7 @@ public class gui extends javax.swing.JFrame {
     public void stop(){
         if(!"".equals(curr_song)){
             mp.stop();
+            jToggleButton1.setIcon((ImageIcon) im.ini("play_s.png"));
             jToggleButton1.setSelected(false);
             curr_song = "";
         }
@@ -407,8 +423,6 @@ public class gui extends javax.swing.JFrame {
     {
         
     }
-    
-    
 
     //FUNCIONES END ------------------------------------------------------------
     
@@ -492,9 +506,27 @@ public class gui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    
-    
-    
+    //NOT FINISHED
+    private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
+        // TODO add your handling code here:
+        System.out.println("\n\nClicked Song: ");
+        
+        //Get clicked items(songs)
+        int ids[] = jTree1.getSelectionModel().getSelectionRows();
+        
+        //stop, play it
+        stop();
+        for(int i = 0; i < ids.length; i++){
+            Cancion c = new db().get_cancion(ids[i]);
+            set_song_remote(c.getUrl());
+        }
+    }//GEN-LAST:event_jTree1MouseClicked
+
+    private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
+        // TODO add your handling code here:
+        jTextField1.setText("");
+    }//GEN-LAST:event_jTextField1MouseClicked
+
     //EVENTS END _______________________________________________________________
     /**
      * @param args the command line arguments
@@ -536,9 +568,6 @@ public class gui extends javax.swing.JFrame {
         
     }//END MAIN
     
-    
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -562,6 +591,6 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JSlider jSlider2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JTree jTree1;
+    public static javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }

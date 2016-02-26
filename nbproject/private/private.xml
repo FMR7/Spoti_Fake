@@ -3,7 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/I:/Fernando/Documents/GitHub/Spoti_Fake/src/Pojos/Disco.java</file>
+            <file>file:/I:/Fernando/Documents/GitHub/Spoti_Fake/src/spotifake/db.java</file>
+            <file>file:/I:/Fernando/Documents/GitHub/Spoti_Fake/src/Dao/Dao_canciones.java</file>
+            <file>file:/I:/Fernando/Documents/GitHub/Spoti_Fake/src/spotifake/gui.java</file>
         </group>
     </open-files>
 </project-private>

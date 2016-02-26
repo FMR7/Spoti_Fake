@@ -3,6 +3,7 @@ package spotifake;
 import Pojos.Cancion;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,7 +19,7 @@ public class db {
     private final String host, port, database, user, pass;
     
     Connection conexion;
-    Statement s;
+    PreparedStatement s;
     ResultSet rs;
     
     public db(){
@@ -29,6 +30,7 @@ public class db {
         this.pass = "";
     }
     
+    //OK
     public List<Cancion> get_canciones(){
         List <Cancion> c = new ArrayList<>();
         
@@ -36,8 +38,8 @@ public class db {
             Class.forName("com.mysql.jdbc.Driver");
             
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
-            s = conexion.createStatement();
-            rs = s.executeQuery("select * from canciones");
+            s = conexion.prepareStatement("select * from canciones");
+            rs = s.executeQuery();
 
             while(rs.next())
             {
@@ -45,14 +47,16 @@ public class db {
             }
             
             for(int i = 0; i < c.size(); i++){
-                System.out.print("\nID: " + c.get(i).getId());
-                System.out.print(" Nombre: " + c.get(i).getNombre());
-                System.out.print(" ID_Disco: " + c.get(i).getId_disco());
+                System.out.println("\nID: " + c.get(i).getId());
+                System.out.println(" Nombre: " + c.get(i).getNombre());
+                System.out.println(" ID_Disco: " + c.get(i).getId_disco());
                 System.out.println(" URL: " + c.get(i).getUrl());
                 System.out.println(" Rating: " + c.get(i).getRating());
                 System.out.println(" Genero: " + c.get(i).getGenero());
             }
-            
+            rs.close();
+            s.close();
+            conexion.close();
         }
         catch(ClassNotFoundException | SQLException ex){
             ex.printStackTrace();
@@ -61,6 +65,42 @@ public class db {
         return(c);
     }
     
+    //OK
+    public Cancion get_cancion(int id){
+        Cancion c = null;
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select * from canciones where id = ?");
+            s.setInt(1, id);
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                c = (new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+            }
+
+            System.out.println("\nID: " + c.getId());
+            System.out.println(" Nombre: " + c.getNombre());
+            System.out.println(" ID_Disco: " + c.getId_disco());
+            System.out.println(" URL: " + c.getUrl());
+            System.out.println(" Rating: " + c.getRating());
+            System.out.println(" Genero: " + c.getGenero());
+            
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(ClassNotFoundException | SQLException ex){
+            ex.printStackTrace();
+        }
+        
+        return(c);
+    }
+    
+    //OK
     public List<Cancion> get_canciones_disco(String nombre_disco){
         List <Cancion> c = new ArrayList<>();
         
@@ -68,23 +108,26 @@ public class db {
             Class.forName("com.mysql.jdbc.Driver");
             
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
-            s = conexion.createStatement();
-            rs = s.executeQuery("select * from canciones");
+            s = conexion.prepareStatement("select c.* from canciones c, discos d where d.nombre = ?");
+            s.setString(1, nombre_disco);
+            rs = s.executeQuery();
 
             while(rs.next())
             {
                 c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
             }
-            
+            System.out.println("\nCanciones del disco: " + nombre_disco);
             for(int i = 0; i < c.size(); i++){
-                System.out.print("\nID: " + c.get(i).getId());
-                System.out.print(" Nombre: " + c.get(i).getNombre());
-                System.out.print(" ID_Disco: " + c.get(i).getId_disco());
+                System.out.println("ID: " + c.get(i).getId());
+                System.out.println(" Nombre: " + c.get(i).getNombre());
+                System.out.println(" ID_Disco: " + c.get(i).getId_disco());
                 System.out.println(" URL: " + c.get(i).getUrl());
                 System.out.println(" Rating: " + c.get(i).getRating());
                 System.out.println(" Genero: " + c.get(i).getGenero());
             }
-            
+            rs.close();
+            s.close();
+            conexion.close();
         }
         catch(ClassNotFoundException | SQLException ex){
             ex.printStackTrace();
