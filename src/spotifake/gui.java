@@ -3,16 +3,12 @@ package spotifake;
 import Dao.Dao_canciones;
 import Pojos.Cancion;
 import java.io.File;
-import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import static javafx.scene.media.MediaPlayer.Status.PLAYING;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import resources.icons.img; //import images for the gui
 
 /**
@@ -25,6 +21,8 @@ public class gui extends javax.swing.JFrame {
     
     String track_list[]; //array de strings con las direcciones de las canciones
     List<String> urls = new ArrayList<>();
+    
+    Player ply = new Player();
     
     public gui() {
         initComponents();
@@ -60,8 +58,11 @@ public class gui extends javax.swing.JFrame {
             //db db_con = new db();
             //List <Cancion> c = db_con.get_canciones();
             //List <Cancion> c = db_con.get_canciones_disco("Disco1");
-            Dao_canciones d_c = new Dao_canciones();
-            d_c.fill_song_names();
+            
+            //Dao_canciones d_c = new Dao_canciones();
+            //d_c.fill_song_names();
+            
+            jComboBox1.setSelectedIndex(0);
             
         } catch (Exception ex) {
             System.out.println("WARNING CAN'T LOAD RESOURCES");
@@ -69,24 +70,6 @@ public class gui extends javax.swing.JFrame {
         }
     }
     
-    public void run() throws ClassNotFoundException, SQLException{
-        //----------
-        db db_con = new db();
-        //urls = db_con.db_connect(); //carga urls
-
-        for(int i = 0; i < urls.size(); i++)
-        {
-            set_song_remote(urls.get(i).toString());
-            //mp.getOnStopped()...
-            
-            while(mp.getStatus().PLAYING.equals(PLAYING)){//bucle sin fin
-                
-            }
-            System.out.println("FINISH PLAYING");
-        }
-        //----------
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -110,6 +93,7 @@ public class gui extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jSlider2 = new javax.swing.JSlider();
         jLabel2 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -209,11 +193,6 @@ public class gui extends javax.swing.JFrame {
                 jTextField1MouseClicked(evt);
             }
         });
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
 
         jLabel1.setBackground(new java.awt.Color(102, 102, 255));
         jLabel1.setText("Album image here");
@@ -228,6 +207,13 @@ public class gui extends javax.swing.JFrame {
         jSlider2.setValue(0);
 
         jLabel2.setText("00:00/00:00");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Canciones", "Grupos", "Autores", "Discos" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -272,7 +258,8 @@ public class gui extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                    .addComponent(jTextField1))
+                    .addComponent(jTextField1)
+                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -295,11 +282,17 @@ public class gui extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -310,98 +303,15 @@ public class gui extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1)))
-                .addContainerGap())
+                        .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     //FUNCIONES INI ------------------------------------------------------------
-    
-    //READ DB DATA FROM FILE
-    public void read_db_data(String file){
-        
-        
-        //CALL db_connect(u, p, usr, pw);
-    }
-    
-    //CONECT DB
-    public void db_connect(String url, String port, String user, String pass){
-       
-        
-        //GET GROUPS
-        //CALL node_add(str, x);
-    }
-        
-    //jTREE ADD NODE
-    public void node_add(String n_name, int n_pos){
-        
-        
-    }
-    
-    Media m;
-    MediaPlayer mp;
-    String curr_song = "";
-    
-    //SET SONG LOCAL
-    public void set_song(String song_url){
-        curr_song = song_url;
-        m = new Media(Paths.get(song_url).toUri().toString());
-        mp = new MediaPlayer(m);
-        play();
-        jLabel1.setText(curr_song);
-    }
-    
-    //SET SONG REMOTE
-    public void set_song_remote(String song_url){
-        curr_song = song_url;
-        m = new Media(curr_song);
-        mp = new MediaPlayer(m);
-        play();
-        jLabel1.setText(curr_song);
-    }
-    
-    //PLAY
-    public void play(){
-        if(!"".equals(curr_song)){
-           mp.play();
-           jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
-        }
-        else{
-            jToggleButton1.doClick();
-            JOptionPane.showMessageDialog(null, "Select an audio file.");
-        }
-        
-    }
-    
-    //PAUSE
-    public void pause(){
-        if(!"".equals(curr_song)){
-           mp.pause(); 
-        }
-    }
-    
-    //STOP
-    public void stop(){
-        if(!"".equals(curr_song)){
-            mp.stop();
-            jToggleButton1.setIcon((ImageIcon) im.ini("play_s.png"));
-            jToggleButton1.setSelected(false);
-            curr_song = "";
-        }
-    }
-    
-    //NEXT SONG
-    //PREVIOUS SONG
-    //FORWARD
-    //BACKWARD
     
     //ADD ALBUM IMG
     //LOAD SONGS FROM ALBUM
@@ -412,16 +322,15 @@ public class gui extends javax.swing.JFrame {
     //crear un boton alargado por canción ¿?
     //DOUBLECLICK EVENT - PLAY CLICKED SONG
     
-    //SEARCH
+    //SEARCH, switch combobox
     public void search(String s)
     {
         
     }
-    
-    //ADVANCED SEARCH
-    public void search_adv(String s, int n) //n = búsqueda por grupo, album/disco, artista, canción
-    {
-        
+
+    public void clear_tree(){
+        DefaultTreeModel modelo = null;
+        jTree1.setModel(modelo);
     }
 
     //FUNCIONES END ------------------------------------------------------------
@@ -437,12 +346,12 @@ public class gui extends javax.swing.JFrame {
         if(jToggleButton1.isSelected() == true)
         {
             jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
-            play();
+            ply.play_song();
         }
         else
         {
             jToggleButton1.setIcon((ImageIcon) im.ini("play_s.png"));
-            pause();
+            ply.pause_song();
         }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
@@ -454,12 +363,12 @@ public class gui extends javax.swing.JFrame {
 
     //Stop
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        stop();
+        ply.stop_song();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     //Next
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        pause();
+        ply.pause_song();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     //Select local file
@@ -471,7 +380,7 @@ public class gui extends javax.swing.JFrame {
         if(result == JFileChooser.APPROVE_OPTION){
             File selfile = fc.getSelectedFile();
             System.out.println("Selected file: " + selfile);
-            set_song(selfile.toString());
+            ply.set_song(selfile.toString());
             if(jToggleButton1.isSelected() == false)
             {
                 jToggleButton1.doClick();
@@ -487,46 +396,84 @@ public class gui extends javax.swing.JFrame {
 
     
     //Mute
-    boolean audio = true;
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        if(audio == true){
-            jButton4.setIcon((ImageIcon) im.ini("mute.png"));
-            mp.setMute(true);
-            audio = false;
-        }else{
-            jButton4.setIcon((ImageIcon) im.ini("unmute.png"));
-            mp.setMute(false);
-            audio = true;
-        }
-        
+        ply.mute();
     }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
 
     //NOT FINISHED
     private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
         // TODO add your handling code here:
-        System.out.println("\n\nClicked Song: ");
+        String str1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+        System.out.println("\nComboBox: " + str1);
+        switch(str1){
+            case "Canciones":
+                TreePath tp = jTree1.getSelectionPath().getParentPath();
         
-        //Get clicked items(songs)
-        int ids[] = jTree1.getSelectionModel().getSelectionRows();
-        
-        //stop, play it
-        stop();
-        for(int i = 0; i < ids.length; i++){
-            Cancion c = new db().get_cancion(ids[i]);
-            set_song_remote(c.getUrl());
+                if(tp == null){ //It's the root node
+
+                }else{ //It's a song
+                    //Get clicked song
+                    String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
+                    String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
+                    String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
+                    System.out.print("\n\nClicked Song: " + n);
+
+                    //Play clicked song
+                    Cancion c = new db().get_cancion(n);
+                    ply.set_song_remote(c.getUrl());
+                }
+                
+                break;
+            case "Grupos":
+                
+                break;
+            case "Autores":
+                
+                break;
+            case "Discos":
+                
+                break;
+            default:
+                
+                break;
+            
         }
     }//GEN-LAST:event_jTree1MouseClicked
 
+    //Search clear
     private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
         // TODO add your handling code here:
         jTextField1.setText("");
     }//GEN-LAST:event_jTextField1MouseClicked
 
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+        String s = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+        System.out.println("ComboBox: " + s);
+        clear_tree();
+        switch(s){
+            case "Canciones":
+                new Dao_canciones().fill_song_names();
+                
+                break;
+            case "Grupos":
+                
+                break;
+            case "Autores":
+                
+                break;
+            case "Discos":
+                
+                break;
+            default:
+                
+                break;
+            
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    
     //EVENTS END _______________________________________________________________
     /**
      * @param args the command line arguments
@@ -573,9 +520,10 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    public static javax.swing.JButton jButton4;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JComboBox<String> jComboBox1;
+    public static javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -590,7 +538,7 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSlider jSlider2;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JToggleButton jToggleButton1;
+    public static javax.swing.JToggleButton jToggleButton1;
     public static javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }

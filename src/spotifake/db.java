@@ -101,6 +101,41 @@ public class db {
     }
     
     //OK
+    public Cancion get_cancion(String nombre){
+        Cancion c = null;
+        
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select * from canciones where nombre = ?");
+            s.setString(1, nombre);
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                c = (new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+            }
+
+            System.out.println("\nID: " + c.getId());
+            System.out.println(" Nombre: " + c.getNombre());
+            System.out.println(" ID_Disco: " + c.getId_disco());
+            System.out.println(" URL: " + c.getUrl());
+            System.out.println(" Rating: " + c.getRating());
+            System.out.println(" Genero: " + c.getGenero());
+            
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(ClassNotFoundException | SQLException ex){
+            ex.printStackTrace();
+        }
+        
+        return(c);
+    }
+    
+    //OK
     public List<Cancion> get_canciones_disco(String nombre_disco){
         List <Cancion> c = new ArrayList<>();
         

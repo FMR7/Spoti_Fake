@@ -15,14 +15,14 @@ import spotifake.gui;
 public class Dao_canciones {
     private DefaultMutableTreeNode raiz;
     private DefaultTreeModel modelo;
-    
-    private JTree tree;
     private db DB;
+    
     
     public Dao_canciones() {
         this.raiz = new DefaultMutableTreeNode("Canciones");
         this.DB = new db();
     }
+    
     
     //Fill node tree with songs
     public void fill_song_names(){
@@ -35,6 +35,4 @@ public class Dao_canciones {
         modelo = new DefaultTreeModel(raiz);
         gui.jTree1.setModel(modelo);
     }
-    
-    
 }
