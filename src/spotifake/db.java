@@ -6,9 +6,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,6 +30,11 @@ public class db {
         this.database = "musica";
         this.user = "root";
         this.pass = "";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(db.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     //OK
@@ -35,8 +42,6 @@ public class db {
         List <Cancion> c = new ArrayList<>();
         
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
             s = conexion.prepareStatement("select * from canciones");
             rs = s.executeQuery();
@@ -58,7 +63,9 @@ public class db {
             s.close();
             conexion.close();
         }
-        catch(ClassNotFoundException | SQLException ex){
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
             ex.printStackTrace();
         }
         
@@ -70,8 +77,6 @@ public class db {
         Cancion c = null;
         
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
             s = conexion.prepareStatement("select * from canciones where id = ?");
             s.setInt(1, id);
@@ -93,7 +98,7 @@ public class db {
             s.close();
             conexion.close();
         }
-        catch(ClassNotFoundException | SQLException ex){
+        catch(SQLException ex){
             ex.printStackTrace();
         }
         
@@ -105,8 +110,6 @@ public class db {
         Cancion c = null;
         
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
             s = conexion.prepareStatement("select * from canciones where nombre = ?");
             s.setString(1, nombre);
@@ -128,7 +131,7 @@ public class db {
             s.close();
             conexion.close();
         }
-        catch(ClassNotFoundException | SQLException ex){
+        catch(SQLException ex){
             ex.printStackTrace();
         }
         
@@ -140,8 +143,6 @@ public class db {
         List <Cancion> c = new ArrayList<>();
         
         try{
-            Class.forName("com.mysql.jdbc.Driver");
-            
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
             s = conexion.prepareStatement("select c.* from canciones c, discos d where d.nombre = ?");
             s.setString(1, nombre_disco);
@@ -164,10 +165,12 @@ public class db {
             s.close();
             conexion.close();
         }
-        catch(ClassNotFoundException | SQLException ex){
+        catch(SQLException ex){
             ex.printStackTrace();
         }
         
         return(c);
     }
+    
+    
 }

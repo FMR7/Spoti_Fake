@@ -1,5 +1,6 @@
 package spotifake;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Paths;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -17,14 +18,21 @@ public class Player extends Thread{
     private MediaPlayer mp;
     private String curr_song;
     
-    private boolean audio = true;
-    private boolean isPlaying = false;
+    private boolean audio;
+    private boolean isPlaying;
+    
+    private final img im;
+    
+    public Player() {
+        this.curr_song = "";
+        this.audio = true;
+        this.isPlaying = false;
+        this.im = new img();
+    }
     
     public boolean isPlaying() {
         return isPlaying;
     }
-    
-    private img im = new img();
     
     public void mute(){
         if(audio == true){
@@ -47,15 +55,33 @@ public class Player extends Thread{
     }
     
     //SET SONG REMOTE
-    public void set_song_remote(String song_url){
+    public void set_song_remote(String song_url) throws UnsupportedEncodingException {
         if(isPlaying()){
             stop_song();
         }
         curr_song = song_url;
-        m = new Media(curr_song);
+        
+        //Replace " " by "%20"
+        String s[] = curr_song.split(" ");
+        if(s.length > 1){
+            String nueva = "";
+            for(int i = 0; i < s.length; i++){
+                if(i == s.length-1){
+                    nueva += s[i]; 
+                }else{
+                    nueva += s[i] + "%20";
+                }
+            }
+            m = new Media(nueva);
+            gui.jLabel1.setText(nueva);
+        }else
+        {
+            m = new Media(curr_song);
+            gui.jLabel1.setText(curr_song);
+        }
+        
         mp = new MediaPlayer(m);
         play_song();
-        gui.jLabel1.setText(curr_song);
     }
     
     //PLAY
@@ -64,6 +90,7 @@ public class Player extends Thread{
            mp.play();
            isPlaying = true;
            gui.jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
+           gui.jToggleButton1.setSelected(true);
         }
         else{
             gui.jToggleButton1.doClick();
@@ -74,7 +101,7 @@ public class Player extends Thread{
     
     //PAUSE
     public void pause_song(){
-        if(!"".equals(curr_song)){
+        if(isPlaying){
            mp.pause();
            isPlaying = false;
         }

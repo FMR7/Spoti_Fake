@@ -3,8 +3,11 @@ package spotifake;
 import Dao.Dao_canciones;
 import Pojos.Cancion;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.tree.DefaultTreeModel;
@@ -407,22 +410,25 @@ public class gui extends javax.swing.JFrame {
         String str1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
         System.out.println("\nComboBox: " + str1);
         switch(str1){
-            case "Canciones":
+            case "Canciones": //GET CLICKED SONG
                 TreePath tp = jTree1.getSelectionPath().getParentPath();
         
                 if(tp == null){ //It's the root node
 
                 }else{ //It's a song
-                    //Get clicked song
-                    String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
-                    String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
-                    String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
-                    System.out.print("\n\nClicked Song: " + n);
+                    try {
+                        String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
+                        String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
+                        String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
+                        System.out.println("\n\nClicked Song: " + n);
 
-                    //Play clicked song
-                    Cancion c = new db().get_cancion(n);
-                    ply.set_song_remote(c.getUrl());
-                }
+                        //Play clicked song
+                        Cancion c = new db().get_cancion(n);
+                        ply.set_song_remote(c.getUrl());
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    }
                 
                 break;
             case "Grupos":
