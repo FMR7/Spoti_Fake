@@ -15,7 +15,7 @@ import static spotifake.gui.jLabel1;
  */
 public class Player extends Thread{
     private Media m;
-    private MediaPlayer mp;
+    public static MediaPlayer mp;
     private String curr_song;
     
     private boolean audio;

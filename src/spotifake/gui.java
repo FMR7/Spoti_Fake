@@ -1,7 +1,13 @@
 package spotifake;
 
+import Dao.Dao_autores;
 import Dao.Dao_canciones;
+import Dao.Dao_discos;
+import Dao.Dao_grupos;
+import Pojos.Autor;
 import Pojos.Cancion;
+import Pojos.Disco;
+import Pojos.Grupo;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -20,14 +26,23 @@ import resources.icons.img; //import images for the gui
  */
 public class gui extends javax.swing.JFrame {
     
+    public static List<Cancion> st_canciones;
+    public static List<Grupo> st_grupos;
+    public static List <Disco> st_discos;
+    public static List <Autor> st_autores;
+    
+    public static boolean showing_discos = false;
+    public static boolean showing_autores = false;
+    
     img im = new img(); //load images for the gui
     
     String track_list[]; //array de strings con las direcciones de las canciones
     List<String> urls = new ArrayList<>();
     
-    Player ply = new Player();
+    Player ply;
     
     public gui() {
+        
         initComponents();
         
         try {
@@ -58,14 +73,9 @@ public class gui extends javax.swing.JFrame {
             jButton4.setBorderPainted(false);
             jButton4.setIcon((ImageIcon) im.ini("unmute.png"));
             
-            //db db_con = new db();
-            //List <Cancion> c = db_con.get_canciones();
-            //List <Cancion> c = db_con.get_canciones_disco("Disco1");
-            
-            //Dao_canciones d_c = new Dao_canciones();
-            //d_c.fill_song_names();
-            
             jComboBox1.setSelectedIndex(0);
+            
+            this.ply = new Player();
             
         } catch (Exception ex) {
             System.out.println("WARNING CAN'T LOAD RESOURCES");
@@ -114,21 +124,7 @@ public class gui extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(569, 376));
         setResizable(false);
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Groups");
-        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Group1");
-        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Albums");
-        javax.swing.tree.DefaultMutableTreeNode treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Album1");
-        treeNode3.add(treeNode4);
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Album2");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Group2");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("Albums");
-        treeNode4 = new javax.swing.tree.DefaultMutableTreeNode("Album1");
-        treeNode3.add(treeNode4);
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -314,7 +310,7 @@ public class gui extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    //FUNCIONES INI ------------------------------------------------------------
+    //FUNCTIONS INI ------------------------------------------------------------
     
     //ADD ALBUM IMG
     //LOAD SONGS FROM ALBUM
@@ -335,15 +331,13 @@ public class gui extends javax.swing.JFrame {
         DefaultTreeModel modelo = null;
         jTree1.setModel(modelo);
     }
-
-    //FUNCIONES END ------------------------------------------------------------
+    //FUNCTIONS END ------------------------------------------------------------
     
     
     
     
     
     //EVENTS INI _______________________________________________________________
-    
     //Play/Pause
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         if(jToggleButton1.isSelected() == true)
@@ -371,7 +365,7 @@ public class gui extends javax.swing.JFrame {
 
     //Next
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        ply.pause_song();
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     //Select local file
@@ -397,7 +391,6 @@ public class gui extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    
     //Mute
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
@@ -409,10 +402,9 @@ public class gui extends javax.swing.JFrame {
         // TODO add your handling code here:
         String str1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
         System.out.println("\nComboBox: " + str1);
+        TreePath tp = jTree1.getSelectionPath().getParentPath();
         switch(str1){
-            case "Canciones": //GET CLICKED SONG
-                TreePath tp = jTree1.getSelectionPath().getParentPath();
-        
+            case "Canciones": //Finish
                 if(tp == null){ //It's the root node
 
                 }else{ //It's a song
@@ -420,25 +412,117 @@ public class gui extends javax.swing.JFrame {
                         String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
                         String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
                         String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
-                        System.out.println("\n\nClicked Song: " + n);
-
+                        System.out.println("Clicked Song: " + n);
+                        
+                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                        int sel_id = st_canciones.get(sel[0]-1).getId();
+                        
                         //Play clicked song
-                        Cancion c = new db().get_cancion(n);
+                        Cancion c = new db().get_cancion(sel_id);
                         ply.set_song_remote(c.getUrl());
                     } catch (UnsupportedEncodingException ex) {
                         Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }
+                
+                break;
+            case "Grupos": //Not Finish
+                if(tp == null){ //It's the root node
+
+                }else{ 
+                    if(showing_discos == false){
+                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                        String s[] = str.split(",");
+                        String n = s[1].substring(1, s[1].length()-1);
+                        System.out.println("Clicked Group: " + n);
+                        System.out.println("Albums:");
+                        
+                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                        int sel_id = st_grupos.get(sel[0]-1).getId();
+
+                        //List<Disco> d = new db().get_discos_grupo(sel_id);
+                        new Dao_discos(n).fill_album_names_by_group(sel_id);
+                        showing_discos = true;
+                    }else{ //Show album songs in main panel <---------------------------------
+                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                        String s[] = str.split(",");
+                        String n = s[1].substring(1, s[1].length()-1);
+                        System.out.println("Clicked Album: " + n);
+                        
                     }
+                }
+                
+                
                 
                 break;
-            case "Grupos":
+            case "Autores": //Finish
+                if(tp == null){ //It's the root node
+
+                }else{ 
+                    if(showing_autores == false){
+                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                        String s[] = str.split(",");
+                        String n = s[1].substring(1, s[1].length()-1);
+                        System.out.println("Clicked Autor: " + n);
+                        
+                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                        int sel_id = st_autores.get(sel[0]-1).getId();
+                        
+                        new Dao_canciones(n).fill_song_names_by_autor(sel_id);
+                        showing_autores = true;
+                    } else{
+                        try {
+                            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
+                            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
+                            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
+                            System.out.println("Clicked Song: " + n);
+                            
+                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                            int sel_id = st_canciones.get(sel[0]-1).getId();
+                            
+                            //Play clicked song
+                            Cancion c = new db().get_cancion(sel_id);
+                            ply.set_song_remote(c.getUrl());
+                        } catch (UnsupportedEncodingException ex) {
+                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
                 
                 break;
-            case "Autores":
-                
-                break;
-            case "Discos":
-                
+            case "Discos": //Finish
+                if(tp == null){
+
+                }else{ 
+                    if(showing_discos == false){
+                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                        String s[] = str.split(",");
+                        String n = s[1].substring(1, s[1].length()-1);
+                        System.out.println("Clicked Album: " + n);
+                        
+                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                        int sel_id = st_discos.get(sel[0]-1).getId();
+                        
+                        new Dao_canciones(n).fill_song_names_by_album(sel_id);
+                        showing_discos = true;
+                    } else{
+                        try {
+                            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
+                            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
+                            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
+                            System.out.println("Clicked Song: " + n);
+                            
+                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                            int sel_id = st_canciones.get(sel[0]-1).getId();
+                            
+                            //Play clicked song
+                            Cancion c = new db().get_cancion(sel_id);
+                            ply.set_song_remote(c.getUrl());
+                        } catch (UnsupportedEncodingException ex) {
+                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }   
+                }
                 break;
             default:
                 
@@ -455,8 +539,10 @@ public class gui extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
+        showing_discos = false;
+        showing_autores = false;
         String s = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
-        System.out.println("ComboBox: " + s);
+        System.out.println("\nComboBox: " + s);
         clear_tree();
         switch(s){
             case "Canciones":
@@ -464,12 +550,15 @@ public class gui extends javax.swing.JFrame {
                 
                 break;
             case "Grupos":
+                new Dao_grupos().fill_group_names();
                 
                 break;
             case "Autores":
+                new Dao_autores().fill_autor_names();
                 
                 break;
             case "Discos":
+                new Dao_discos().fill_album_names();
                 
                 break;
             default:
@@ -530,7 +619,7 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JComboBox<String> jComboBox1;
     public static javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    public static javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -542,7 +631,7 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSlider jSlider2;
+    public static javax.swing.JSlider jSlider2;
     private javax.swing.JTextField jTextField1;
     public static javax.swing.JToggleButton jToggleButton1;
     public static javax.swing.JTree jTree1;
