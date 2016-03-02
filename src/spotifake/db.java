@@ -4,8 +4,12 @@ import Pojos.Autor;
 import Pojos.Cancion;
 import Pojos.Disco;
 import Pojos.Grupo;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -249,6 +256,7 @@ public class db {
         return(d);
     }
     
+    //OK
     public List<Disco> get_discos(){
         List <Disco> d = new ArrayList<>();
         
@@ -279,6 +287,46 @@ public class db {
         }
         
         return(d);
+    }
+    
+    //OK
+    public Icon get_disco_img(int id){
+        ImageIcon icon = null;
+        String url = "";
+        try{
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select d.url_img from discos d where d.id = ?");
+            s.setInt(1, id);
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                url = rs.getString(1);
+            }
+            
+            System.out.println("IMG_URL: \"" + url + "\"");
+            
+            if(!"".equals(url)){
+                URL url1 = new URL(url);
+                BufferedImage img = ImageIO.read(url1);
+                Image dimg = img.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+                icon = new ImageIcon(dimg);
+            }
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
+            ex.printStackTrace();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(db.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(db.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return(icon);
     }
     
     //AUTORES

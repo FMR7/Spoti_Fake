@@ -6,6 +6,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import spotifake.db;
 import spotifake.gui;
+import static spotifake.gui.jLabel1;
 
 /**
  *
@@ -54,9 +55,10 @@ public class Dao_canciones {
         gui.jTree1.setModel(modelo);
     }
     
+    //ADD ALBUM IMG by id_disco
     //Fill node tree with songs
-    public void fill_song_names_by_album(int id_album){
-        List <Cancion> c = DB.get_canciones_disco(id_album);
+    public void fill_song_names_by_album(int id_disco){
+        List <Cancion> c = DB.get_canciones_disco(id_disco);
         gui.st_canciones = c;
         for(Cancion can: c){
             DefaultMutableTreeNode song = new DefaultMutableTreeNode();
@@ -65,5 +67,6 @@ public class Dao_canciones {
         }
         modelo = new DefaultTreeModel(raiz);
         gui.jTree1.setModel(modelo);
+        jLabel1.setIcon(DB.get_disco_img(id_disco));
     }
 }

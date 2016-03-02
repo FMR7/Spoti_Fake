@@ -32,6 +32,7 @@ public class gui extends javax.swing.JFrame {
     public static List <Autor> st_autores;
     
     public static boolean showing_discos = false;
+    public static boolean showing_songs = false;
     public static boolean showing_autores = false;
     
     img im = new img(); //load images for the gui
@@ -175,7 +176,7 @@ public class gui extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 627, Short.MAX_VALUE)
+            .addGap(0, 635, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,6 +196,7 @@ public class gui extends javax.swing.JFrame {
 
         jLabel1.setBackground(new java.awt.Color(102, 102, 255));
         jLabel1.setText("Album image here");
+        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
         jButton4.setPreferredSize(new java.awt.Dimension(23, 23));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -256,9 +258,9 @@ public class gui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                    .addComponent(jTextField1)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jComboBox1, 0, 190, Short.MAX_VALUE)
+                    .addComponent(jTextField1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -273,22 +275,22 @@ public class gui extends javax.swing.JFrame {
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSlider2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jSlider2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -420,6 +422,7 @@ public class gui extends javax.swing.JFrame {
                         //Play clicked song
                         Cancion c = new db().get_cancion(sel_id);
                         ply.set_song_remote(c.getUrl());
+                        jLabel1.setText("   " + c.getNombre());
                     } catch (UnsupportedEncodingException ex) {
                         Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -444,11 +447,36 @@ public class gui extends javax.swing.JFrame {
                         new Dao_discos(n).fill_album_names_by_group(sel_id);
                         showing_discos = true;
                     }else{ //Show album songs in main panel <---------------------------------
-                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
-                        String s[] = str.split(",");
-                        String n = s[1].substring(1, s[1].length()-1);
-                        System.out.println("Clicked Album: " + n);
-                        
+                        if(showing_songs == false){
+                            String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                            String s[] = str.split(",");
+                            String n = s[1].substring(1, s[1].length()-1);
+                            System.out.println("Clicked Album: " + n);
+
+                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                            int sel_id = st_discos.get(sel[0]-1).getId();
+
+                            new Dao_canciones(n).fill_song_names_by_album(sel_id);
+                            
+                            showing_songs = true;
+                        }else{
+                            try {
+                            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
+                            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
+                            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
+                            System.out.println("Clicked Song: " + n);
+                            
+                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                            int sel_id = st_canciones.get(sel[0]-1).getId();
+                            
+                            //Play clicked song
+                            Cancion c = new db().get_cancion(sel_id);
+                            ply.set_song_remote(c.getUrl());
+                            jLabel1.setText("   " + c.getNombre());
+                        } catch (UnsupportedEncodingException ex) {
+                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        }
                     }
                 }
                 
@@ -483,6 +511,7 @@ public class gui extends javax.swing.JFrame {
                             //Play clicked song
                             Cancion c = new db().get_cancion(sel_id);
                             ply.set_song_remote(c.getUrl());
+                            jLabel1.setText("   " + c.getNombre());
                         } catch (UnsupportedEncodingException ex) {
                             Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -518,6 +547,7 @@ public class gui extends javax.swing.JFrame {
                             //Play clicked song
                             Cancion c = new db().get_cancion(sel_id);
                             ply.set_song_remote(c.getUrl());
+                            jLabel1.setText("   " + c.getNombre());
                         } catch (UnsupportedEncodingException ex) {
                             Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -541,6 +571,8 @@ public class gui extends javax.swing.JFrame {
         // TODO add your handling code here:
         showing_discos = false;
         showing_autores = false;
+        showing_songs = false;
+        
         String s = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
         System.out.println("\nComboBox: " + s);
         clear_tree();
