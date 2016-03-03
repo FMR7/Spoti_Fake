@@ -23,11 +23,19 @@ public class Dao_canciones {
         this.DB = new db();
     }
     
-    public Dao_canciones(String name) {
-        this.raiz = new DefaultMutableTreeNode("Canciones de " + name);
-        this.DB = new db();
+    public Dao_canciones(String name, int n) {
+        switch (n){
+            case 1:
+                this.raiz = new DefaultMutableTreeNode("Canciones de " + name);
+                this.DB = new db();
+                break;
+            case 2:
+                this.raiz = new DefaultMutableTreeNode("Album: " + name);
+                this.DB = new db();
+                break;
+        }
+        
     }
-    
     
     //Fill node tree with songs
     public void fill_song_names(){

@@ -25,6 +25,7 @@ import resources.icons.img; //import images for the gui
  * @author Fernando
  */
 public class gui extends javax.swing.JFrame {
+    public static int current_song_id = 1;
     
     public static List<Cancion> st_canciones;
     public static List<Grupo> st_grupos;
@@ -314,14 +315,8 @@ public class gui extends javax.swing.JFrame {
 
     //FUNCTIONS INI ------------------------------------------------------------
     
-    //ADD ALBUM IMG
-    //LOAD SONGS FROM ALBUM
-    //AUTO PLAY FIRST SONG
     
     //EDITABLE SONG PROGRESS BAR
-    
-    //crear un boton alargado por canción ¿?
-    //DOUBLECLICK EVENT - PLAY CLICKED SONG
     
     //SEARCH, switch combobox
     public void search(String s)
@@ -354,9 +349,19 @@ public class gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
-    //Back
+    //Previous song
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        if(current_song_id != 1){
+            try {
+                ply.set_song_remote(st_canciones.get(current_song_id-2).getUrl());
+                jLabel1.setText("   " + st_canciones.get(current_song_id-2).getNombre());
+                
+                current_song_id = current_song_id-1;
+                jTree1.setSelectionRow(current_song_id);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -365,9 +370,19 @@ public class gui extends javax.swing.JFrame {
         ply.stop_song();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    //Next
+    //Next song
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+        if(current_song_id != st_canciones.size()){
+            try {
+                ply.set_song_remote(st_canciones.get(current_song_id).getUrl());
+                jLabel1.setText("   " + st_canciones.get(current_song_id).getNombre());
+                
+                current_song_id = current_song_id+1;
+                jTree1.setSelectionRow(current_song_id);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     //Select local file
@@ -395,7 +410,6 @@ public class gui extends javax.swing.JFrame {
 
     //Mute
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
         ply.mute();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -418,6 +432,7 @@ public class gui extends javax.swing.JFrame {
                         
                         int[] sel = jTree1.getSelectionModel().getSelectionRows();
                         int sel_id = st_canciones.get(sel[0]-1).getId();
+                        current_song_id = jTree1.getSelectionRows()[0];
                         
                         //Play clicked song
                         Cancion c = new db().get_cancion(sel_id);
@@ -456,7 +471,7 @@ public class gui extends javax.swing.JFrame {
                             int[] sel = jTree1.getSelectionModel().getSelectionRows();
                             int sel_id = st_discos.get(sel[0]-1).getId();
 
-                            new Dao_canciones(n).fill_song_names_by_album(sel_id);
+                            new Dao_canciones(n,2).fill_song_names_by_album(sel_id);
                             
                             showing_songs = true;
                         }else{
@@ -468,6 +483,7 @@ public class gui extends javax.swing.JFrame {
                             
                             int[] sel = jTree1.getSelectionModel().getSelectionRows();
                             int sel_id = st_canciones.get(sel[0]-1).getId();
+                            current_song_id = jTree1.getSelectionRows()[0];
                             
                             //Play clicked song
                             Cancion c = new db().get_cancion(sel_id);
@@ -496,7 +512,7 @@ public class gui extends javax.swing.JFrame {
                         int[] sel = jTree1.getSelectionModel().getSelectionRows();
                         int sel_id = st_autores.get(sel[0]-1).getId();
                         
-                        new Dao_canciones(n).fill_song_names_by_autor(sel_id);
+                        new Dao_canciones(n,1).fill_song_names_by_autor(sel_id);
                         showing_autores = true;
                     } else{
                         try {
@@ -507,6 +523,7 @@ public class gui extends javax.swing.JFrame {
                             
                             int[] sel = jTree1.getSelectionModel().getSelectionRows();
                             int sel_id = st_canciones.get(sel[0]-1).getId();
+                            current_song_id = jTree1.getSelectionRows()[0];
                             
                             //Play clicked song
                             Cancion c = new db().get_cancion(sel_id);
@@ -532,7 +549,7 @@ public class gui extends javax.swing.JFrame {
                         int[] sel = jTree1.getSelectionModel().getSelectionRows();
                         int sel_id = st_discos.get(sel[0]-1).getId();
                         
-                        new Dao_canciones(n).fill_song_names_by_album(sel_id);
+                        new Dao_canciones(n,2).fill_song_names_by_album(sel_id);
                         showing_discos = true;
                     } else{
                         try {
@@ -543,6 +560,7 @@ public class gui extends javax.swing.JFrame {
                             
                             int[] sel = jTree1.getSelectionModel().getSelectionRows();
                             int sel_id = st_canciones.get(sel[0]-1).getId();
+                            current_song_id = jTree1.getSelectionRows()[0];
                             
                             //Play clicked song
                             Cancion c = new db().get_cancion(sel_id);

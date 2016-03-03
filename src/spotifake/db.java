@@ -134,7 +134,7 @@ public class db {
             }
             System.out.println("\nCanciones del disco: ");
             for(int i = 0; i < c.size(); i++){
-                System.out.println("ID: " + c.get(i).getId());
+                System.out.println("\nID: " + c.get(i).getId());
                 System.out.println(" Nombre: " + c.get(i).getNombre());
                 System.out.println(" ID_Disco: " + c.get(i).getId_disco());
                 System.out.println(" URL: " + c.get(i).getUrl());
@@ -304,7 +304,7 @@ public class db {
                 url = rs.getString(1);
             }
             
-            System.out.println("IMG_URL: \"" + url + "\"");
+            System.out.println("\nIMG_URL: \"" + url + "\"");
             
             if(!"".equals(url)){
                 URL url1 = new URL(url);
