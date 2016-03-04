@@ -3,6 +3,7 @@ package spotifake;
 import Dao.Dao_autores;
 import Dao.Dao_canciones;
 import Dao.Dao_discos;
+import Dao.Dao_generos;
 import Dao.Dao_grupos;
 import Pojos.Autor;
 import Pojos.Cancion;
@@ -31,6 +32,7 @@ public class gui extends javax.swing.JFrame {
     public static List<Grupo> st_grupos;
     public static List <Disco> st_discos;
     public static List <Autor> st_autores;
+    public static List <String> st_generos;
     
     public static boolean showing_discos = false;
     public static boolean showing_songs = false;
@@ -210,7 +212,7 @@ public class gui extends javax.swing.JFrame {
 
         jLabel2.setText("00:00/00:00");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Canciones", "Grupos", "Autores", "Discos" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Canciones", "Grupos", "Autores", "Discos", "Generos" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -356,6 +358,8 @@ public class gui extends javax.swing.JFrame {
                 ply.set_song_remote(st_canciones.get(current_song_id-2).getUrl());
                 jLabel1.setText("   " + st_canciones.get(current_song_id-2).getNombre());
                 
+                jLabel1.setIcon(new db().get_disco_img(st_canciones.get(current_song_id-2).getId_disco()));
+                
                 current_song_id = current_song_id-1;
                 jTree1.setSelectionRow(current_song_id);
             } catch (UnsupportedEncodingException ex) {
@@ -376,6 +380,8 @@ public class gui extends javax.swing.JFrame {
             try {
                 ply.set_song_remote(st_canciones.get(current_song_id).getUrl());
                 jLabel1.setText("   " + st_canciones.get(current_song_id).getNombre());
+                
+                jLabel1.setIcon(new db().get_disco_img(st_canciones.get(current_song_id).getId_disco()));
                 
                 current_song_id = current_song_id+1;
                 jTree1.setSelectionRow(current_song_id);
@@ -438,6 +444,8 @@ public class gui extends javax.swing.JFrame {
                         Cancion c = new db().get_cancion(sel_id);
                         ply.set_song_remote(c.getUrl());
                         jLabel1.setText("   " + c.getNombre());
+                        
+                        jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
                     } catch (UnsupportedEncodingException ex) {
                         Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -472,7 +480,6 @@ public class gui extends javax.swing.JFrame {
                             int sel_id = st_discos.get(sel[0]-1).getId();
 
                             new Dao_canciones(n,2).fill_song_names_by_album(sel_id);
-                            
                             showing_songs = true;
                         }else{
                             try {
@@ -489,15 +496,14 @@ public class gui extends javax.swing.JFrame {
                             Cancion c = new db().get_cancion(sel_id);
                             ply.set_song_remote(c.getUrl());
                             jLabel1.setText("   " + c.getNombre());
+                            
+                            jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
                         } catch (UnsupportedEncodingException ex) {
                             Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         }
                     }
                 }
-                
-                
-                
                 break;
             case "Autores": //Finish
                 if(tp == null){ //It's the root node
@@ -529,6 +535,8 @@ public class gui extends javax.swing.JFrame {
                             Cancion c = new db().get_cancion(sel_id);
                             ply.set_song_remote(c.getUrl());
                             jLabel1.setText("   " + c.getNombre());
+                            
+                            jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
                         } catch (UnsupportedEncodingException ex) {
                             Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -566,11 +574,52 @@ public class gui extends javax.swing.JFrame {
                             Cancion c = new db().get_cancion(sel_id);
                             ply.set_song_remote(c.getUrl());
                             jLabel1.setText("   " + c.getNombre());
+
+                            jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
                         } catch (UnsupportedEncodingException ex) {
                             Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }   
                 }
+                break;
+            case "Generos": //Finish
+                if(tp == null){ //It's the root node
+
+                }else{ 
+                    if(showing_autores == false){
+                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                        String s[] = str.split(",");
+                        String n = s[1].substring(1, s[1].length()-1);
+                        System.out.println("Clicked genero: " + n);
+                        
+                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                        String sel_gen = st_generos.get(sel[0]-1);
+                        
+                        new Dao_canciones(n,1).fill_song_names_by_genere(sel_gen);
+                        showing_autores = true;
+                    } else{
+                        try {
+                            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
+                            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
+                            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
+                            System.out.println("Clicked Song: " + n);
+                            
+                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                            int sel_id = st_canciones.get(sel[0]-1).getId();
+                            current_song_id = jTree1.getSelectionRows()[0];
+                            
+                            //Play clicked song
+                            Cancion c = new db().get_cancion(sel_id);
+                            ply.set_song_remote(c.getUrl());
+                            jLabel1.setText("   " + c.getNombre());
+                            
+                            jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
+                        } catch (UnsupportedEncodingException ex) {
+                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                
                 break;
             default:
                 
@@ -609,6 +658,10 @@ public class gui extends javax.swing.JFrame {
                 break;
             case "Discos":
                 new Dao_discos().fill_album_names();
+                
+                break;
+            case "Generos":
+                new Dao_generos().fill_genero_names();
                 
                 break;
             default:

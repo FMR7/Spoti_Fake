@@ -80,6 +80,7 @@ public class Player extends Thread{
             gui.jLabel1.setText(curr_song);
         }
         
+        
         mp = new MediaPlayer(m);
         play_song();
     }

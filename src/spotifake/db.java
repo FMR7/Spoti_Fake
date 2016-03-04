@@ -189,6 +189,41 @@ public class db {
         return(c);
     }
     
+    //OK
+    public List<Cancion> get_canciones_genero(String genero){
+        List <Cancion> c = new ArrayList<>();
+        try{
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select c.id, c.nombre, c.id_disco, c.url, c.rating, c.genero from canciones c where c.genero = ?");
+            s.setString(1, genero);
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+            }
+            
+            for(int i = 0; i < c.size(); i++){
+                System.out.println("\nID: " + c.get(i).getId());
+                System.out.println(" Nombre: " + c.get(i).getNombre());
+                System.out.println(" ID_Disco: " + c.get(i).getId_disco());
+                System.out.println(" URL: " + c.get(i).getUrl());
+                System.out.println(" Rating: " + c.get(i).getRating());
+                System.out.println(" Genero: " + c.get(i).getGenero());
+            }
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
+            ex.printStackTrace();
+        }
+        
+        return(c);
+    }
+    
     //GRUPOS
     //OK
     public List<Grupo> get_grupos(){
@@ -347,6 +382,38 @@ public class db {
             for(int i = 0; i < a.size(); i++){
                 System.out.println("\nID: " + a.get(i).getId());
                 System.out.println(" Nombre: " + a.get(i).getNombre());
+            }
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
+            ex.printStackTrace();
+        }
+        
+        return(a);
+    }
+    
+    //GENEROS
+    //OK
+    public List<String> get_generos(){
+        List <String> a = new ArrayList<>();
+        
+        try{
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select c.genero FROM canciones c group by c.genero");
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                a.add(rs.getString(1));
+            }
+            
+            System.out.println("\nGeneros:");
+            for(int i = 0; i < a.size(); i++){
+                System.out.println(a.get(i));
             }
             rs.close();
             s.close();

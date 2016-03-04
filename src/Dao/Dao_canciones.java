@@ -63,6 +63,19 @@ public class Dao_canciones {
         gui.jTree1.setModel(modelo);
     }
     
+    //Fill node tree with songs
+    public void fill_song_names_by_genere(String genero){
+        List <Cancion> c = DB.get_canciones_genero(genero);
+        gui.st_canciones = c;
+        for(Cancion can: c){
+            DefaultMutableTreeNode song = new DefaultMutableTreeNode();
+            song.setUserObject(can.getNombre());
+            raiz.add(song);
+        }
+        modelo = new DefaultTreeModel(raiz);
+        gui.jTree1.setModel(modelo);
+    }
+    
     //ADD ALBUM IMG by id_disco
     //Fill node tree with songs
     public void fill_song_names_by_album(int id_disco){
@@ -75,6 +88,7 @@ public class Dao_canciones {
         }
         modelo = new DefaultTreeModel(raiz);
         gui.jTree1.setModel(modelo);
-        jLabel1.setIcon(DB.get_disco_img(id_disco));
+        
+        jLabel1.setIcon(DB.get_disco_img(c.get(1).getId_disco()));
     }
 }
