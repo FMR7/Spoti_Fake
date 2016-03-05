@@ -22,7 +22,7 @@ public class Dao_discos {
     }
     
     public Dao_discos(String name) {
-        this.raiz = new DefaultMutableTreeNode("Discos: " + name);
+        this.raiz = new DefaultMutableTreeNode("Discos de " + name);
         this.DB = new db();
     }
     
@@ -42,6 +42,20 @@ public class Dao_discos {
     //Fill node tree with specific group albums
     public void fill_album_names_by_group(int id){
         List <Disco> d = DB.get_discos_grupo(id);
+        gui.st_discos = d;
+        for(Disco dis: d){
+            DefaultMutableTreeNode song = new DefaultMutableTreeNode();
+            song.setUserObject(dis.getNombre());
+            raiz.add(song);
+        }
+        modelo = new DefaultTreeModel(raiz);
+        gui.jTree1.setModel(modelo);
+    }
+    
+    //SEARCH
+    //Fill node tree with specific group albums
+    public void fill_album_names_by_name(String nombre){
+        List <Disco> d = DB.get_discos(nombre);
         gui.st_discos = d;
         for(Disco dis: d){
             DefaultMutableTreeNode song = new DefaultMutableTreeNode();

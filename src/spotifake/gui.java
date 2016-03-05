@@ -196,6 +196,11 @@ public class gui extends javax.swing.JFrame {
                 jTextField1MouseClicked(evt);
             }
         });
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setBackground(new java.awt.Color(102, 102, 255));
         jLabel1.setText("Album image here");
@@ -595,7 +600,7 @@ public class gui extends javax.swing.JFrame {
                         int[] sel = jTree1.getSelectionModel().getSelectionRows();
                         String sel_gen = st_generos.get(sel[0]-1);
                         
-                        new Dao_canciones(n,1).fill_song_names_by_genere(sel_gen);
+                        new Dao_canciones(n,1).fill_song_names_by_gendre(sel_gen);
                         showing_autores = true;
                     } else{
                         try {
@@ -639,6 +644,7 @@ public class gui extends javax.swing.JFrame {
         showing_discos = false;
         showing_autores = false;
         showing_songs = false;
+        jTextField1.setText("Search...");
         
         String s = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
         System.out.println("\nComboBox: " + s);
@@ -670,6 +676,44 @@ public class gui extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+        String input = jTextField1.getText();
+        if(!"".equals(input)){
+            String s = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+            clear_tree();
+            switch(s){
+                case "Canciones":
+                    new Dao_canciones().fill_song_names_by_name(input);
+
+                    break;
+                case "Grupos":
+                    new Dao_grupos().fill_group_names_by_name(input);
+
+                    break;
+                case "Autores":
+                    new Dao_autores().fill_autor_names_by_name(input);
+
+                    break;
+                case "Discos":
+                    new Dao_discos().fill_album_names_by_name(input);
+
+                    break;
+                case "Generos":
+                    new Dao_generos().fill_genero_names_by_genero(input);
+
+                    break;
+                default:
+
+                    break;
+
+            }
+        }else{
+            jComboBox1.setSelectedIndex(jComboBox1.getSelectedIndex());
+        }
+        jTextField1.setText("Search...");
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     
     //EVENTS END _______________________________________________________________

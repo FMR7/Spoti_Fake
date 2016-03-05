@@ -35,4 +35,18 @@ public class Dao_grupos {
         modelo = new DefaultTreeModel(raiz);
         gui.jTree1.setModel(modelo);
     }
+    
+    //SEARCH
+    //Fill node tree with groups by name
+    public void fill_group_names_by_name(String name){
+        List <Grupo> grp = DB.get_grupos(name);
+        gui.st_grupos = grp;
+        for(Grupo gr: grp){
+            DefaultMutableTreeNode song = new DefaultMutableTreeNode();
+            song.setUserObject(gr.getNombre());
+            raiz.add(song);
+        }
+        modelo = new DefaultTreeModel(raiz);
+        gui.jTree1.setModel(modelo);
+    }
 }

@@ -428,5 +428,171 @@ public class db {
         return(a);
     }
     
+    //BUSQUEDA
+    //OK
+    public List<Cancion> get_canciones(String nombre){
+        List <Cancion> c = new ArrayList<>();
+        
+        try{
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select c.id, c.nombre, c.id_disco, c.url, c.rating, c.genero from canciones c where c.nombre like ?");
+            s.setString(1, "%" + nombre + "%");
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+            }
+            
+            for(int i = 0; i < c.size(); i++){
+                System.out.println("\nID: " + c.get(i).getId());
+                System.out.println(" Nombre: " + c.get(i).getNombre());
+                System.out.println(" ID_Disco: " + c.get(i).getId_disco());
+                System.out.println(" URL: " + c.get(i).getUrl());
+                System.out.println(" Rating: " + c.get(i).getRating());
+                System.out.println(" Genero: " + c.get(i).getGenero());
+            }
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
+            ex.printStackTrace();
+        }
+        
+        return(c);
+    }
+
+    //OK
+    public List<Disco> get_discos(String nombre){
+        List <Disco> d = new ArrayList<>();
+        
+        try{
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select d.id, d.nombre, d.fecha, d.url_img from discos d where d.nombre like ?");
+            s.setString(1, "%" + nombre + "%");
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                d.add(new Disco(rs.getInt(1), rs.getString(2), rs.getDate(3), rs.getString(4)));
+            }
+            
+            for(int i = 0; i < d.size(); i++){
+                System.out.println("\nID: " + d.get(i).getId());
+                System.out.println(" Nombre: " + d.get(i).getNombre());
+                System.out.println(" Fecha: " + d.get(i).getFecha());
+                System.out.println(" URL img: " + d.get(i).getUrl_img());
+            }
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
+            ex.printStackTrace();
+        }
+        
+        return(d);
+    }
+    
+    //OK
+    public List<String> get_generos(String nombre){
+        List <String> a = new ArrayList<>();
+        
+        try{
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select c.genero FROM canciones c where c.genero like ? group by c.genero");
+            s.setString(1, "%" + nombre + "%");
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                a.add(rs.getString(1));
+            }
+            
+            System.out.println("\nGeneros:");
+            for(int i = 0; i < a.size(); i++){
+                System.out.println(a.get(i));
+            }
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
+            ex.printStackTrace();
+        }
+        
+        return(a);
+    }
+    
+    //OK
+    public List<Grupo> get_grupos(String nombre){
+        List <Grupo> g = new ArrayList<>();
+        
+        try{
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select * from grupos where nombre like ?");
+            s.setString(1, "%" + nombre + "%");
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                g.add(new Grupo(rs.getInt(1),rs.getString(2)));
+            }
+            
+            for(int i = 0; i < g.size(); i++){
+                System.out.println("\nID: " + g.get(i).getId());
+                System.out.println(" Nombre: " + g.get(i).getNombre());
+            }
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
+            ex.printStackTrace();
+        }
+        
+        return(g);
+    }
+    
+    //OK
+    public List<Autor> get_autores(String nombre){
+        List <Autor> a = new ArrayList<>();
+        
+        try{
+            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            s = conexion.prepareStatement("select a.id, a.nombre from autores a where a.nombre like ?");
+            s.setString(1, "%" + nombre + "%");
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                a.add(new Autor(rs.getInt(1), rs.getString(2)));
+            }
+            
+            for(int i = 0; i < a.size(); i++){
+                System.out.println("\nID: " + a.get(i).getId());
+                System.out.println(" Nombre: " + a.get(i).getNombre());
+            }
+            rs.close();
+            s.close();
+            conexion.close();
+        }
+        catch(SQLException ex){
+            System.out.println("WARNING: No connection to DB.");
+            JOptionPane.showMessageDialog(null, "No connection to DB.");
+            ex.printStackTrace();
+        }
+        
+        return(a);
+    }
     
 }

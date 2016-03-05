@@ -34,5 +34,17 @@ public class Dao_autores {
         gui.jTree1.setModel(modelo);
     }
     
-    
+    //SEARCH
+    //Fill node tree with songs
+    public void fill_autor_names_by_name(String nombre){
+        List <Autor> a = DB.get_autores(nombre);
+        gui.st_autores = a;
+        for(Autor aut: a){
+            DefaultMutableTreeNode song = new DefaultMutableTreeNode();
+            song.setUserObject(aut.getNombre());
+            raiz.add(song);
+        }
+        modelo = new DefaultTreeModel(raiz);
+        gui.jTree1.setModel(modelo);
+    }
 }

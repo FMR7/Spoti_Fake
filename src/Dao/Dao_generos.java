@@ -34,5 +34,17 @@ public class Dao_generos {
         gui.jTree1.setModel(modelo);
     }
     
-    
+    //SEARCH
+    //Fill node tree with groups by gendre
+    public void fill_genero_names_by_genero(String genero){
+        List <String> gen = DB.get_generos(genero);
+        gui.st_generos = gen;
+        for(String ge: gen){
+            DefaultMutableTreeNode song = new DefaultMutableTreeNode();
+            song.setUserObject(ge);
+            raiz.add(song);
+        }
+        modelo = new DefaultTreeModel(raiz);
+        gui.jTree1.setModel(modelo);
+    }
 }
