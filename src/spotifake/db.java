@@ -56,7 +56,7 @@ public class db {
         
         try{
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
-            s = conexion.prepareStatement("select * from canciones");
+            s = conexion.prepareStatement("select c.* from canciones c order by c.nombre");
             rs = s.executeQuery();
 
             while(rs.next())

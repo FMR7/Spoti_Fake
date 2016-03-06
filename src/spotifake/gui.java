@@ -43,7 +43,7 @@ public class gui extends javax.swing.JFrame {
     String track_list[]; //array de strings con las direcciones de las canciones
     List<String> urls = new ArrayList<>();
     
-    Player ply;
+    static Player ply;
     
     public gui() {
         
@@ -424,6 +424,22 @@ public class gui extends javax.swing.JFrame {
         ply.mute();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    public static void set_next_song(){
+        if(current_song_id != st_canciones.size()){
+            try {
+                ply.set_song_remote(st_canciones.get(current_song_id).getUrl());
+                jLabel1.setText("   " + st_canciones.get(current_song_id).getNombre());
+                
+                jLabel1.setIcon(new db().get_disco_img(st_canciones.get(current_song_id).getId_disco()));
+                
+                current_song_id = current_song_id+1;
+                jTree1.setSelectionRow(current_song_id);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     //NOT FINISHED
     private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
         // TODO add your handling code here:

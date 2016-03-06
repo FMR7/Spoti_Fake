@@ -88,10 +88,55 @@ public class Player extends Thread{
     //PLAY
     public void play_song(){
         if(!"".equals(curr_song)){
-           mp.play();
-           isPlaying = true;
-           gui.jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
-           gui.jToggleButton1.setSelected(true);
+            mp.play();
+            isPlaying = true;
+            gui.jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
+            gui.jToggleButton1.setSelected(true);
+            
+            //Run next song
+            mp.setOnEndOfMedia(new Runnable() {
+                @Override
+                public void run() {
+                    gui.set_next_song();
+                }
+            });
+            
+            //Get song duration
+            mp.setOnReady(new Runnable() {
+                @Override
+                public void run() {
+                    int mins = (int) m.getDuration().toMinutes();
+                    int secs = (int) (m.getDuration().toSeconds()%60);
+                    
+                    String s_mins = mins + "";
+                    String s_secs = secs + "";
+                    
+                    if(s_secs.length() == 1){
+                        s_secs = "0" + s_secs;
+                    }
+                    if(s_mins.length() == 1){
+                        s_mins = "0" + s_mins;
+                    }
+                    
+                    String total_time = s_mins + ":" + s_secs;
+                    
+                    gui.jLabel2.setText(total_time + "");
+                }
+            });
+            
+            /*
+            mp.setOnPlaying(new Runnable() {
+                @Override
+                public void run() {
+                    double curr_secs = mp.getCurrentTime().toSeconds();
+                    String curr_secs_mins = "" + curr_secs/60;
+                    curr_secs_mins = curr_secs_mins.substring(0, 4);
+                    curr_secs_mins = curr_secs_mins.replace('.', ':');
+                    gui.jLabel2.setText(curr_secs_mins);
+                    System.out.println("Current Time: " + curr_secs_mins);
+                }
+            });
+            */
         }
         else{
             gui.jToggleButton1.doClick();
