@@ -9,6 +9,7 @@ import spotifake.gui;
 /**
  *
  * @author Fernando
+ * @since V 0.7
  */
 public class Dao_generos {
 
@@ -16,12 +17,19 @@ public class Dao_generos {
     private DefaultTreeModel modelo;
     private db DB;
 
+    /**
+     * 
+     * Default constructor.
+     */
     public Dao_generos() {
         this.raiz = new DefaultMutableTreeNode("Géneros");
         this.DB = new db();
     }
     
-    //Fill node tree with groups
+    /**
+     * 
+     * Fill node tree with groups.
+     */
     public void fill_genero_names(){
         List <String> gen = DB.get_generos();
         gui.st_generos = gen;
@@ -34,8 +42,11 @@ public class Dao_generos {
         gui.jTree1.setModel(modelo);
     }
     
-    //SEARCH
-    //Fill node tree with groups by gendre
+    /**
+     * 
+     * User Search: Fill node tree with groups, filtered by gendre.
+     * @param genero 
+     */
     public void fill_genero_names_by_genero(String genero){
         List <String> gen = DB.get_generos(genero);
         gui.st_generos = gen;

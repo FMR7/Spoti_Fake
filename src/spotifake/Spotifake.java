@@ -1,12 +1,12 @@
 package spotifake;
 
-import java.io.IOException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
  *
  * @author Fernando
+ * @since V 0.1
  */
 public class Spotifake extends Application {
     
@@ -16,11 +16,10 @@ public class Spotifake extends Application {
     }
 
     /**
+     * 
      * @param args the command line arguments
-     * @throws java.io.IOException
      */
-    public static void main(String[] args) throws IOException {
-        
+    public static void main(String[] args) {
         gui g = new gui();
         g.show();
     }

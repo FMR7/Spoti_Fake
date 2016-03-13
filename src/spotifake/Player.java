@@ -7,11 +7,12 @@ import javafx.scene.media.MediaPlayer;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import resources.icons.img;
-import static spotifake.gui.jLabel1;
+import static spotifake.gui.jLabel_album_img;
 
 /**
  *
  * @author Fernando
+ * @since V 0.3
  */
 public class Player extends Thread{
     private Media m;
@@ -23,6 +24,10 @@ public class Player extends Thread{
     
     private final img im;
     
+    /**
+     * 
+     * Default constructor.
+     */
     public Player() {
         this.curr_song = "";
         this.audio = true;
@@ -30,10 +35,18 @@ public class Player extends Thread{
         this.im = new img();
     }
     
+    /**
+     * 
+     * @return Player status, isPlaying.
+     */
     public boolean isPlaying() {
         return isPlaying;
     }
     
+    /**
+     * 
+     * User action: Mute and unmute.
+     */
     public void mute(){
         if(audio == true){
             gui.jButton4.setIcon((ImageIcon) im.ini("mute.png"));
@@ -46,46 +59,63 @@ public class Player extends Thread{
         }
     }
     
+    /**
+     * 
+     * Used to load local mp3 file.
+     * @deprecated
+     * @param song_url 
+     */
     public void set_song(String song_url){
         curr_song = song_url;
         m = new Media(Paths.get(song_url).toUri().toString());
         mp = new MediaPlayer(m);
         play_song();
-        jLabel1.setText(curr_song);
+        gui.jLabel_song_name.setText(curr_song);
     }
     
-    //SET SONG REMOTE
+    /**
+     * 
+     * Used to set a remote song.
+     * @param song_url
+     * @throws UnsupportedEncodingException 
+     */
     public void set_song_remote(String song_url) throws UnsupportedEncodingException {
-        if(isPlaying()){
-            stop_song();
-        }
-        curr_song = song_url;
-        
-        //Replace " " by "%20"
-        String s[] = curr_song.split(" ");
-        if(s.length > 1){
-            String nueva = "";
-            for(int i = 0; i < s.length; i++){
-                if(i == s.length-1){
-                    nueva += s[i]; 
-                }else{
-                    nueva += s[i] + "%20";
-                }
+        if(!song_url.equals(curr_song)){//Evita reproducir la misma canción al hacerle clic.
+            if(isPlaying()){//Si está sonando la para.
+                stop_song();
             }
-            m = new Media(nueva);
-            gui.jLabel1.setText(nueva);
-        }else
-        {
-            m = new Media(curr_song);
-            gui.jLabel1.setText(curr_song);
+            curr_song = song_url;
+            
+            //Format string
+            //Replace " " by "%20"
+            String s[] = curr_song.split(" ");
+            if(s.length > 1){
+                String nueva = "";
+                for(int i = 0; i < s.length; i++){
+                    if(i == s.length-1){
+                        nueva += s[i]; 
+                    }else{
+                        nueva += s[i] + "%20";
+                    }
+                }
+                m = new Media(nueva);
+                gui.jLabel_song_name.setText(nueva);
+            }else
+            {
+                m = new Media(curr_song);
+                gui.jLabel_song_name.setText(curr_song);
+            }
+
+
+            mp = new MediaPlayer(m);
+            play_song();
         }
-        
-        
-        mp = new MediaPlayer(m);
-        play_song();
     }
     
-    //PLAY
+    /**
+     * 
+     * User action: Used when playing a new song and when returning from a paused song.
+     */
     public void play_song(){
         if(!"".equals(curr_song)){
             mp.play();
@@ -93,6 +123,7 @@ public class Player extends Thread{
             gui.jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
             gui.jToggleButton1.setSelected(true);
             
+            //EVENTS
             //Run next song
             mp.setOnEndOfMedia(new Runnable() {
                 @Override
@@ -120,32 +151,21 @@ public class Player extends Thread{
                     
                     String total_time = s_mins + ":" + s_secs;
                     
-                    gui.jLabel2.setText(total_time + "");
+                    gui.jLabel_song_duration.setText(total_time + "");
                 }
             });
-            
-            /*
-            mp.setOnPlaying(new Runnable() {
-                @Override
-                public void run() {
-                    double curr_secs = mp.getCurrentTime().toSeconds();
-                    String curr_secs_mins = "" + curr_secs/60;
-                    curr_secs_mins = curr_secs_mins.substring(0, 4);
-                    curr_secs_mins = curr_secs_mins.replace('.', ':');
-                    gui.jLabel2.setText(curr_secs_mins);
-                    System.out.println("Current Time: " + curr_secs_mins);
-                }
-            });
-            */
         }
         else{
             gui.jToggleButton1.doClick();
-            JOptionPane.showMessageDialog(null, "Select an audio file.");
+            JOptionPane.showMessageDialog(null, "Select a song from the list.");
         }
         
     }
     
-    //PAUSE
+    /**
+     * 
+     * User action: Used when user pause a song.
+     */
     public void pause_song(){
         if(isPlaying){
            mp.pause();
@@ -153,7 +173,10 @@ public class Player extends Thread{
         }
     }
     
-    //STOP
+    /**
+     * 
+     * User action: Used when user stops a song.
+     */
     public void stop_song(){
         if(!"".equals(curr_song)){
             mp.stop();
@@ -163,9 +186,4 @@ public class Player extends Thread{
             curr_song = "";
         }
     }
-    
-    //NEXT SONG
-    //PREVIOUS SONG
-    
-    
 }

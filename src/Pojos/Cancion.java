@@ -3,6 +3,7 @@ package Pojos;
 /**
  *
  * @author Fernando
+ * @since V 0.1
  */
 public class Cancion {
     private final int id;
@@ -12,6 +13,15 @@ public class Cancion {
     private final int rating;
     private final String genero;
 
+    /**
+     * 
+     * @param id
+     * @param nombre
+     * @param id_disco
+     * @param url
+     * @param rating
+     * @param genero 
+     */
     public Cancion(int id, String nombre, int id_disco, String url, int rating, String genero) {
         this.id = id;
         this.nombre = nombre;
@@ -21,26 +31,50 @@ public class Cancion {
         this.genero = genero;
     }
 
+    /**
+     * 
+     * @return id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * 
+     * @return nombre
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * 
+     * @return id_disco
+     */
     public int getId_disco() {
         return id_disco;
     }
 
+    /**
+     * 
+     * @return url
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * 
+     * @return rating
+     */
     public int getRating() {
         return rating;
     }
 
+    /**
+     * 
+     * @return genero
+     */
     public String getGenero() {
         return genero;
     }

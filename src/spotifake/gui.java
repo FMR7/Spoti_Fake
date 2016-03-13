@@ -5,10 +5,12 @@ import Dao.Dao_canciones;
 import Dao.Dao_discos;
 import Dao.Dao_generos;
 import Dao.Dao_grupos;
+
 import Pojos.Autor;
 import Pojos.Cancion;
 import Pojos.Disco;
 import Pojos.Grupo;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -19,17 +21,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+
 import resources.icons.img; //import images for the gui
 
 /**
  *
  * @author Fernando
+ * @since V 0.1
  */
 public class gui extends javax.swing.JFrame {
     public static int current_song_id = 1;
     
-    public static List<Cancion> st_canciones;
-    public static List<Grupo> st_grupos;
+    public static List <Cancion> st_canciones;
+    public static List <Grupo> st_grupos;
     public static List <Disco> st_discos;
     public static List <Autor> st_autores;
     public static List <String> st_generos;
@@ -38,13 +42,17 @@ public class gui extends javax.swing.JFrame {
     public static boolean showing_songs = false;
     public static boolean showing_autores = false;
     
-    img im = new img(); //load images for the gui
+    img im = new img();
     
     String track_list[]; //array de strings con las direcciones de las canciones
     List<String> urls = new ArrayList<>();
     
-    static Player ply;
+    public static Player ply;
     
+    /**
+     * 
+     * Default constructor.
+     */
     public gui() {
         
         initComponents();
@@ -105,11 +113,22 @@ public class gui extends javax.swing.JFrame {
         jToggleButton1 = new javax.swing.JToggleButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        jLabel_album_img = new javax.swing.JLabel();
+        jLabel_song_name = new javax.swing.JLabel();
+        jLabel_song_duration = new javax.swing.JLabel();
+        jLabel_song_album = new javax.swing.JLabel();
+        jLabel_song_group = new javax.swing.JLabel();
+        jLabel_next_song_name = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea_song_author = new javax.swing.JTextArea();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
-        jSlider2 = new javax.swing.JSlider();
-        jLabel2 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -173,17 +192,125 @@ public class gui extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane2.setHorizontalScrollBar(null);
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(837, 314));
+
+        jLabel_album_img.setMaximumSize(new java.awt.Dimension(292, 292));
+        jLabel_album_img.setMinimumSize(new java.awt.Dimension(292, 292));
+        jLabel_album_img.setPreferredSize(new java.awt.Dimension(292, 292));
+        jLabel_album_img.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel_album_imgMouseClicked(evt);
+            }
+        });
+
+        jLabel_song_name.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
+        jLabel_song_duration.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
+        jLabel_song_album.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel_song_album.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel_song_albumMouseClicked(evt);
+            }
+        });
+
+        jLabel_song_group.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+
+        jLabel1.setText("Nombre:");
+
+        jLabel3.setText("Duración:");
+
+        jLabel4.setText("Disco:");
+
+        jLabel5.setText("Autor/es:");
+
+        jLabel6.setText("Grupo:");
+
+        jTextArea_song_author.setEditable(false);
+        jTextArea_song_author.setBackground(new java.awt.Color(240, 240, 240));
+        jTextArea_song_author.setColumns(20);
+        jTextArea_song_author.setLineWrap(true);
+        jTextArea_song_author.setRows(5);
+        jTextArea_song_author.setWrapStyleWord(true);
+        jTextArea_song_author.setAutoscrolls(false);
+        jScrollPane3.setViewportView(jTextArea_song_author);
+
+        jLabel7.setText("Siguiente canción: ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 635, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel_album_img, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel_song_album, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel_song_duration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel_song_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel_next_song_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 41, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel_song_group, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(204, 204, 204))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 303, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel_song_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel_song_duration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel_song_album, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel_song_group, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel_next_song_name, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel_album_img, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jScrollPane2.setViewportView(jPanel1);
@@ -202,20 +329,12 @@ public class gui extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setBackground(new java.awt.Color(102, 102, 255));
-        jLabel1.setText("Album image here");
-        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-
         jButton4.setPreferredSize(new java.awt.Dimension(23, 23));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
-
-        jSlider2.setValue(0);
-
-        jLabel2.setText("00:00/00:00");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Canciones", "Grupos", "Autores", "Discos", "Generos" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -269,11 +388,10 @@ public class gui extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addComponent(jComboBox1, 0, 190, Short.MAX_VALUE)
                     .addComponent(jTextField1))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(55, 55, 55)
+                        .addGap(142, 142, 142)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -281,11 +399,9 @@ public class gui extends javax.swing.JFrame {
                         .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 152, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jSlider2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -293,28 +409,24 @@ public class gui extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -322,23 +434,118 @@ public class gui extends javax.swing.JFrame {
 
     //FUNCTIONS INI ------------------------------------------------------------
     
-    
-    //EDITABLE SONG PROGRESS BAR
-    
-    //SEARCH, switch combobox
-    public void search(String s)
-    {
-        
+    /**
+     * 
+     * Play the next song.
+     */
+    public static void set_next_song(){
+        if(current_song_id != st_canciones.size()){
+            try {
+                ply.set_song_remote(st_canciones.get(current_song_id).getUrl());
+                jLabel_song_name.setText(st_canciones.get(current_song_id).getNombre());
+                
+                jLabel_album_img.setIcon(new db().get_disco_img(st_canciones.get(current_song_id).getId_disco()));
+                
+                current_song_id = current_song_id+1;
+                jTree1.setSelectionRow(current_song_id);
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            load_clicked_song();
+        }
     }
+    
+    /**
+     * 
+     * @return The name of the next song
+     */
+    public static String get_next_song(){
+        String str = "";
+        if(current_song_id != st_canciones.size()){
+            str = st_canciones.get(current_song_id).getNombre();
+        }
+        return(str);
+    }
+    
+    /**
+     * 
+     * Play the selected song and call load_data().
+     */
+    public static void load_clicked_song(){
+        try {
+            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
+            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
+            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
+            System.out.println("Clicked Song: " + n);
+            
+            int[] sel = jTree1.getSelectionModel().getSelectionRows();
+            int sel_id = st_canciones.get(sel[0]-1).getId();
+            current_song_id = jTree1.getSelectionRows()[0];
+            
+            //Play clicked song
+            Cancion c = new db().get_cancion(sel_id);
+            ply.set_song_remote(c.getUrl());
+            
+            load_data(c);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void load_clicked_album(){
+        if(showing_songs == false){
+            String str = jTree1.getSelectionModel().getSelectionPath().toString();
+            String s[] = str.split(",");
+            String n = s[1].substring(1, s[1].length()-1);
+            System.out.println("Clicked Album: " + n);
 
+            int[] sel = jTree1.getSelectionModel().getSelectionRows();
+            int sel_id = st_discos.get(sel[0]-1).getId();
+
+            new Dao_canciones(n,2).fill_song_names_by_album(sel_id);
+            showing_songs = true;
+        }else{
+            load_clicked_song();
+        }
+    }
+    
+    /**
+     * 
+     * Loads the data of the song on the GUI.
+     * @param c 
+     */
+    public static void load_data(Cancion c){
+        jLabel_song_name.setText(c.getNombre());
+        jLabel_song_album.setText(new db().get_disco_nombre(c.getId()));
+        jLabel_song_group.setText(new db().get_grupo(c.getId_disco()));
+        jTextArea_song_author.setText(new db().get_autores(c.getId()));
+        jLabel_next_song_name.setText(get_next_song());
+        jLabel_album_img.setIcon(new db().get_disco_img(c.getId_disco()));
+    }
+    
+    /**
+     * 
+     * Load the songs of the clicked album.
+     * Called when click on album image or album name.
+     */
+    public void load_songs_by_album(){
+        Cancion c = st_canciones.get(current_song_id-1);
+        int id_disco = c.getId_disco();
+        String nombre = new db().get_disco_nombre(c.getId());
+        System.out.println("Album click event: " + nombre);
+        new Dao_canciones(nombre, 2).fill_song_names_by_album(id_disco);
+    }
+    
+    /**
+     * 
+     * Clear the jTree.
+     */
     public void clear_tree(){
         DefaultTreeModel modelo = null;
         jTree1.setModel(modelo);
     }
     //FUNCTIONS END ------------------------------------------------------------
-    
-    
-    
+
     
     
     //EVENTS INI _______________________________________________________________
@@ -361,15 +568,16 @@ public class gui extends javax.swing.JFrame {
         if(current_song_id != 1){
             try {
                 ply.set_song_remote(st_canciones.get(current_song_id-2).getUrl());
-                jLabel1.setText("   " + st_canciones.get(current_song_id-2).getNombre());
+                jLabel_song_name.setText(st_canciones.get(current_song_id-2).getNombre());
                 
-                jLabel1.setIcon(new db().get_disco_img(st_canciones.get(current_song_id-2).getId_disco()));
+                jLabel_album_img.setIcon(new db().get_disco_img(st_canciones.get(current_song_id-2).getId_disco()));
                 
                 current_song_id = current_song_id-1;
                 jTree1.setSelectionRow(current_song_id);
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
             }
+            load_clicked_song();
         }
         
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -381,19 +589,7 @@ public class gui extends javax.swing.JFrame {
 
     //Next song
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if(current_song_id != st_canciones.size()){
-            try {
-                ply.set_song_remote(st_canciones.get(current_song_id).getUrl());
-                jLabel1.setText("   " + st_canciones.get(current_song_id).getNombre());
-                
-                jLabel1.setIcon(new db().get_disco_img(st_canciones.get(current_song_id).getId_disco()));
-                
-                current_song_id = current_song_id+1;
-                jTree1.setSelectionRow(current_song_id);
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        set_next_song();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     //Select local file
@@ -424,52 +620,23 @@ public class gui extends javax.swing.JFrame {
         ply.mute();
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    public static void set_next_song(){
-        if(current_song_id != st_canciones.size()){
-            try {
-                ply.set_song_remote(st_canciones.get(current_song_id).getUrl());
-                jLabel1.setText("   " + st_canciones.get(current_song_id).getNombre());
-                
-                jLabel1.setIcon(new db().get_disco_img(st_canciones.get(current_song_id).getId_disco()));
-                
-                current_song_id = current_song_id+1;
-                jTree1.setSelectionRow(current_song_id);
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
-    //NOT FINISHED
+    //OK
     private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
         // TODO add your handling code here:
         String str1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
         System.out.println("\nComboBox: " + str1);
-        TreePath tp = jTree1.getSelectionPath().getParentPath();
+        TreePath tp = null;
+        try{
+            tp = jTree1.getSelectionPath().getParentPath();
+        }catch(Exception ex){
+            //tp equals null
+        }
         switch(str1){
             case "Canciones": //Finish
                 if(tp == null){ //It's the root node
 
-                }else{ //It's a song
-                    try {
-                        String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
-                        String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
-                        String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
-                        System.out.println("Clicked Song: " + n);
-                        
-                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                        int sel_id = st_canciones.get(sel[0]-1).getId();
-                        current_song_id = jTree1.getSelectionRows()[0];
-                        
-                        //Play clicked song
-                        Cancion c = new db().get_cancion(sel_id);
-                        ply.set_song_remote(c.getUrl());
-                        jLabel1.setText("   " + c.getNombre());
-                        
-                        jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
-                    } catch (UnsupportedEncodingException ex) {
-                        Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                }else{ 
+                    load_clicked_song();
                 }
                 
                 break;
@@ -487,42 +654,10 @@ public class gui extends javax.swing.JFrame {
                         int[] sel = jTree1.getSelectionModel().getSelectionRows();
                         int sel_id = st_grupos.get(sel[0]-1).getId();
 
-                        //List<Disco> d = new db().get_discos_grupo(sel_id);
                         new Dao_discos(n).fill_album_names_by_group(sel_id);
                         showing_discos = true;
                     }else{ //Show album songs in main panel <---------------------------------
-                        if(showing_songs == false){
-                            String str = jTree1.getSelectionModel().getSelectionPath().toString();
-                            String s[] = str.split(",");
-                            String n = s[1].substring(1, s[1].length()-1);
-                            System.out.println("Clicked Album: " + n);
-
-                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                            int sel_id = st_discos.get(sel[0]-1).getId();
-
-                            new Dao_canciones(n,2).fill_song_names_by_album(sel_id);
-                            showing_songs = true;
-                        }else{
-                            try {
-                            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
-                            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
-                            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
-                            System.out.println("Clicked Song: " + n);
-                            
-                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                            int sel_id = st_canciones.get(sel[0]-1).getId();
-                            current_song_id = jTree1.getSelectionRows()[0];
-                            
-                            //Play clicked song
-                            Cancion c = new db().get_cancion(sel_id);
-                            ply.set_song_remote(c.getUrl());
-                            jLabel1.setText("   " + c.getNombre());
-                            
-                            jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
-                        } catch (UnsupportedEncodingException ex) {
-                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        }
+                        load_clicked_album();
                     }
                 }
                 break;
@@ -542,25 +677,7 @@ public class gui extends javax.swing.JFrame {
                         new Dao_canciones(n,1).fill_song_names_by_autor(sel_id);
                         showing_autores = true;
                     } else{
-                        try {
-                            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
-                            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
-                            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
-                            System.out.println("Clicked Song: " + n);
-                            
-                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                            int sel_id = st_canciones.get(sel[0]-1).getId();
-                            current_song_id = jTree1.getSelectionRows()[0];
-                            
-                            //Play clicked song
-                            Cancion c = new db().get_cancion(sel_id);
-                            ply.set_song_remote(c.getUrl());
-                            jLabel1.setText("   " + c.getNombre());
-                            
-                            jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
-                        } catch (UnsupportedEncodingException ex) {
-                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                            load_clicked_song();
                     }
                 }
                 
@@ -569,38 +686,7 @@ public class gui extends javax.swing.JFrame {
                 if(tp == null){
 
                 }else{ 
-                    if(showing_discos == false){
-                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
-                        String s[] = str.split(",");
-                        String n = s[1].substring(1, s[1].length()-1);
-                        System.out.println("Clicked Album: " + n);
-                        
-                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                        int sel_id = st_discos.get(sel[0]-1).getId();
-                        
-                        new Dao_canciones(n,2).fill_song_names_by_album(sel_id);
-                        showing_discos = true;
-                    } else{
-                        try {
-                            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
-                            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
-                            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
-                            System.out.println("Clicked Song: " + n);
-                            
-                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                            int sel_id = st_canciones.get(sel[0]-1).getId();
-                            current_song_id = jTree1.getSelectionRows()[0];
-                            
-                            //Play clicked song
-                            Cancion c = new db().get_cancion(sel_id);
-                            ply.set_song_remote(c.getUrl());
-                            jLabel1.setText("   " + c.getNombre());
-
-                            jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
-                        } catch (UnsupportedEncodingException ex) {
-                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }   
+                    load_clicked_album();
                 }
                 break;
             case "Generos": //Finish
@@ -619,31 +705,17 @@ public class gui extends javax.swing.JFrame {
                         new Dao_canciones(n,1).fill_song_names_by_gendre(sel_gen);
                         showing_autores = true;
                     } else{
-                        try {
-                            String str = jTree1.getSelectionModel().getSelectionPath().toString(); //Devuelve "[Canciones, CANCION]"
-                            String s[] = str.split(","); //SPLIT, Nos quedamos con " CANCION]"
-                            String n = s[1].substring(1, s[1].length()-1); //Cogemos "CANCION"
-                            System.out.println("Clicked Song: " + n);
-                            
-                            int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                            int sel_id = st_canciones.get(sel[0]-1).getId();
-                            current_song_id = jTree1.getSelectionRows()[0];
-                            
-                            //Play clicked song
-                            Cancion c = new db().get_cancion(sel_id);
-                            ply.set_song_remote(c.getUrl());
-                            jLabel1.setText("   " + c.getNombre());
-                            
-                            jLabel1.setIcon(new db().get_disco_img(c.getId_disco()));
-                        } catch (UnsupportedEncodingException ex) {
-                            Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                            load_clicked_song();
                     }
                 }
                 
                 break;
             default:
-                
+                if(tp == null){ //It's the root node
+
+                }else{ 
+                    load_clicked_song();
+                }
                 break;
             
         }
@@ -655,6 +727,7 @@ public class gui extends javax.swing.JFrame {
         jTextField1.setText("");
     }//GEN-LAST:event_jTextField1MouseClicked
 
+    //Filter changed.
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
         showing_discos = false;
@@ -687,12 +760,14 @@ public class gui extends javax.swing.JFrame {
                 
                 break;
             default:
+                new Dao_canciones().fill_song_names();
                 
                 break;
             
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
-
+    
+    //Search, switchable by jComboBox.
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
         String input = jTextField1.getText();
@@ -731,6 +806,19 @@ public class gui extends javax.swing.JFrame {
         jTextField1.setText("Search...");
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    //Load the songs of the clicked album image.
+    private void jLabel_album_imgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_album_imgMouseClicked
+        // TODO add your handling code here:
+        load_songs_by_album();
+    }//GEN-LAST:event_jLabel_album_imgMouseClicked
+
+    //Load the songs of the clicked album name.
+    private void jLabel_song_albumMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_song_albumMouseClicked
+        // TODO add your handling code here:
+        load_songs_by_album();
+    }//GEN-LAST:event_jLabel_song_albumMouseClicked
+
+    
     
     //EVENTS END _______________________________________________________________
     /**
@@ -781,8 +869,18 @@ public class gui extends javax.swing.JFrame {
     public static javax.swing.JButton jButton4;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JComboBox<String> jComboBox1;
-    public static javax.swing.JLabel jLabel1;
-    public static javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    public static javax.swing.JLabel jLabel7;
+    public static javax.swing.JLabel jLabel_album_img;
+    public static javax.swing.JLabel jLabel_next_song_name;
+    public static javax.swing.JLabel jLabel_song_album;
+    public static javax.swing.JLabel jLabel_song_duration;
+    public static javax.swing.JLabel jLabel_song_group;
+    public static javax.swing.JLabel jLabel_song_name;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -794,7 +892,8 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    public static javax.swing.JSlider jSlider2;
+    private javax.swing.JScrollPane jScrollPane3;
+    public static javax.swing.JTextArea jTextArea_song_author;
     private javax.swing.JTextField jTextField1;
     public static javax.swing.JToggleButton jToggleButton1;
     public static javax.swing.JTree jTree1;

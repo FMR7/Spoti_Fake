@@ -6,23 +6,33 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import spotifake.db;
 import spotifake.gui;
-import static spotifake.gui.jLabel1;
+import static spotifake.gui.jLabel_album_img;
 
 /**
  *
  * @author Fernando
+ * @since V 0.2
  */
 public class Dao_canciones {
     private DefaultMutableTreeNode raiz;
     private DefaultTreeModel modelo;
     private db DB;
     
-    
+    /**
+     * 
+     * Default constructor.
+     */
     public Dao_canciones() {
         this.raiz = new DefaultMutableTreeNode("Canciones");
         this.DB = new db();
     }
     
+    /**
+     * 
+     * Customize the root node of the jTree.
+     * @param name Nombre de la cancián o del disco
+     * @param n 1 = canción, 2 = disco
+     */
     public Dao_canciones(String name, int n) {
         switch (n){
             case 1:
@@ -37,7 +47,10 @@ public class Dao_canciones {
         
     }
     
-    //Fill node tree with all songs
+    /**
+     * 
+     * Fill node tree with all songs, ordered by name.
+     */
     public void fill_song_names(){
         List <Cancion> c = DB.get_canciones();
         gui.st_canciones = c;
@@ -50,8 +63,11 @@ public class Dao_canciones {
         gui.jTree1.setModel(modelo);
     }
     
-    //SEARCH
-    //Fill node tree with songs by name
+    /**
+     * 
+     * User Search: Fill node tree with songs, filered by name.
+     * @param nombre 
+     */
     public void fill_song_names_by_name(String nombre){
         List <Cancion> c = DB.get_canciones(nombre);
         gui.st_canciones = c;
@@ -64,7 +80,11 @@ public class Dao_canciones {
         gui.jTree1.setModel(modelo);
     }
     
-    //Fill node tree with songs by autor id
+    /**
+     * 
+     * Fill node tree with songs, filered by autor id.
+     * @param id_autor 
+     */
     public void fill_song_names_by_autor(int id_autor){
         List <Cancion> c = DB.get_canciones_autor(id_autor);
         gui.st_canciones = c;
@@ -77,7 +97,11 @@ public class Dao_canciones {
         gui.jTree1.setModel(modelo);
     }
     
-    //Fill node tree with songs by gendre
+    /**
+     * 
+     * Fill node tree with songs, filered by gendre.
+     * @param genero 
+     */
     public void fill_song_names_by_gendre(String genero){
         List <Cancion> c = DB.get_canciones_genero(genero);
         gui.st_canciones = c;
@@ -90,8 +114,10 @@ public class Dao_canciones {
         gui.jTree1.setModel(modelo);
     }
     
-    //ADD ALBUM IMG by id_disco
-    //Fill node tree with songs by album id
+    /**
+     * Shows album image & fills node tree with songs from album.
+     * @param id_disco 
+     */
     public void fill_song_names_by_album(int id_disco){
         List <Cancion> c = DB.get_canciones_disco(id_disco);
         gui.st_canciones = c;
@@ -103,6 +129,6 @@ public class Dao_canciones {
         modelo = new DefaultTreeModel(raiz);
         gui.jTree1.setModel(modelo);
         
-        jLabel1.setIcon(DB.get_disco_img(c.get(1).getId_disco()));
+        jLabel_album_img.setIcon(DB.get_disco_img(c.get(1).getId_disco()));
     }
 }

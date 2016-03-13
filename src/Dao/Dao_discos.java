@@ -10,23 +10,36 @@ import spotifake.gui;
 /**
  *
  * @author Fernando
+ * @since V 0.4
  */
 public class Dao_discos {
     private DefaultMutableTreeNode raiz;
     private DefaultTreeModel modelo;
     private db DB;
 
+    /**
+     * 
+     * Default constructor.
+     */
     public Dao_discos() {
         this.raiz = new DefaultMutableTreeNode("Discos");
         this.DB = new db();
     }
     
+    /**
+     * 
+     * Used to show all albums of an author.
+     * @param name 
+     */
     public Dao_discos(String name) {
         this.raiz = new DefaultMutableTreeNode("Discos de " + name);
         this.DB = new db();
     }
     
-    //Fill node tree with all albums
+    /**
+     * 
+     * Fill node tree with all albums.
+     */
     public void fill_album_names(){
         List <Disco> d = DB.get_discos();
         gui.st_discos = d;
@@ -39,7 +52,11 @@ public class Dao_discos {
         gui.jTree1.setModel(modelo);
     }
     
-    //Fill node tree with specific group albums
+    /**
+     * 
+     * Fill node tree with albums of a specific group.
+     * @param id 
+     */
     public void fill_album_names_by_group(int id){
         List <Disco> d = DB.get_discos_grupo(id);
         gui.st_discos = d;
@@ -52,8 +69,11 @@ public class Dao_discos {
         gui.jTree1.setModel(modelo);
     }
     
-    //SEARCH
-    //Fill node tree with specific group albums
+    /**
+     * 
+     * User Search: Fill node tree with specific group albums, filered by name.
+     * @param nombre 
+     */
     public void fill_album_names_by_name(String nombre){
         List <Disco> d = DB.get_discos(nombre);
         gui.st_discos = d;

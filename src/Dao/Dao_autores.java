@@ -10,18 +10,26 @@ import spotifake.gui;
 /**
  *
  * @author Fernando
+ * @since V 0.4
  */
 public class Dao_autores {
     private DefaultMutableTreeNode raiz;
     private DefaultTreeModel modelo;
     private db DB;
 
+    /**
+     * 
+     * Default constructor.
+     */
     public Dao_autores() {
         this.raiz = new DefaultMutableTreeNode("Autores");
         this.DB = new db();
     }
     
-    //Fill node tree with songs
+    /**
+     * 
+     * Fill node tree with songs.
+     */
     public void fill_autor_names(){
         List <Autor> a = DB.get_autores();
         gui.st_autores = a;
@@ -34,8 +42,11 @@ public class Dao_autores {
         gui.jTree1.setModel(modelo);
     }
     
-    //SEARCH
-    //Fill node tree with songs
+    /**
+     * 
+     * User Search: Fill node tree with songs, filtered by name.
+     * @param nombre 
+     */
     public void fill_autor_names_by_name(String nombre){
         List <Autor> a = DB.get_autores(nombre);
         gui.st_autores = a;

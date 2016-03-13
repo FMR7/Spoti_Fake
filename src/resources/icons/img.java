@@ -10,9 +10,15 @@ import javax.swing.ImageIcon;
 /**
  *
  * @author Fernando
+ * @since V 0.1
  */
 public class img {
     
+    /**
+     * 
+     * @param name
+     * @return The image object.
+     */
     public Object ini(String name){
         return(new ImageIcon(getClass().getResource(name)));
     }
