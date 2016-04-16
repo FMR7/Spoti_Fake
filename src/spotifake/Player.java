@@ -61,20 +61,6 @@ public class Player extends Thread{
     
     /**
      * 
-     * Used to load local mp3 file.
-     * @deprecated
-     * @param song_url 
-     */
-    public void set_song(String song_url){
-        curr_song = song_url;
-        m = new Media(Paths.get(song_url).toUri().toString());
-        mp = new MediaPlayer(m);
-        play_song();
-        gui.jLabel_song_name.setText(curr_song);
-    }
-    
-    /**
-     * 
      * Used to set a remote song.
      * @param song_url
      * @throws UnsupportedEncodingException 
