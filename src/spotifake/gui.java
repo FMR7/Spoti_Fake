@@ -12,7 +12,6 @@ import Pojos.Disco;
 import Pojos.Grupo;
 import com.persistence.ConfigFiles;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -29,7 +27,7 @@ import resources.icons.img; //import images for the gui
 /**
  *
  * @author Fernando
- * @since V 0.1
+ * @since V 1.3
  */
 public class gui extends javax.swing.JFrame {
     public static int current_song_id = 1;
@@ -44,6 +42,7 @@ public class gui extends javax.swing.JFrame {
     public static boolean showing_songs = false;
     public static boolean showing_autores = false;
     
+    private static boolean debug = true;
     img im = new img();
     
     String track_list[]; //array de strings con las direcciones de las canciones
@@ -98,8 +97,8 @@ public class gui extends javax.swing.JFrame {
             ConfigFiles cf = new ConfigFiles();
             cf.newFile("LANG", newProperties, "Language configuration.");
             
-            Properties loadFile = cf.loadFile("LANG");
-            System.out.println("LANG: " + loadFile.getProperty("lang"));
+            Properties loadFile = cf.loadFile("LANG", debug);
+            //System.out.println("LANG: " + loadFile.getProperty("lang"));
             loadLang(loadFile.getProperty("lang"));
             
             
@@ -452,20 +451,20 @@ public class gui extends javax.swing.JFrame {
             Properties loadFile;
             switch(lang){
                 case "ES":
-                    loadFile = cf.loadFile(lang);
+                    loadFile = cf.loadFile(lang, debug);
                     jMenu1.setText("Idioma");
                     jMenu2.setText("Ayuda");
                     jMenuItem1.setText("Acerca de SpotiFake");
                     break;
                 case "EN":
-                    loadFile = cf.loadFile(lang);
+                    loadFile = cf.loadFile(lang, debug);
                     jMenu1.setText("Language");
                     jMenu2.setText("Help");
                     jMenuItem1.setText("About");
                     break;
 
                 default:
-                    loadFile = cf.loadFile("EN");
+                    loadFile = cf.loadFile("EN", debug);
                     break;
             }
             
