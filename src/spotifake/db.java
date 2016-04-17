@@ -189,7 +189,7 @@ public class db {
         List <Cancion> c = new ArrayList<>();
         try{
             conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
-            s = conexion.prepareStatement("select c.id, c.nombre, c.id_disco, c.url, c.rating, c.genero from canciones c where c.genero = ?");
+            s = conexion.prepareStatement("select * from v_canciones_genero where genero = ?");
             s.setString(1, genero);
             rs = s.executeQuery();
 

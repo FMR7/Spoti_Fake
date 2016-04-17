@@ -15,9 +15,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-CREATE DATABASE IF NOT EXISTS `musica`;
-USE `musica`;
-
 --
 -- Table structure for table `autores`
 --
@@ -29,7 +26,7 @@ CREATE TABLE `autores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(40) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,7 +58,7 @@ CREATE TABLE `canciones` (
   `rating` int(11) DEFAULT NULL,
   `genero` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +74,7 @@ CREATE TABLE `discos` (
   `fecha` date DEFAULT NULL,
   `url_img` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +88,7 @@ CREATE TABLE `grupos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(40) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,6 +118,43 @@ CREATE TABLE `grupos_discos` (
   PRIMARY KEY (`id_grupo`,`id_disco`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `v_canciones_genero`
+--
+
+DROP TABLE IF EXISTS `v_canciones_genero`;
+/*!50001 DROP VIEW IF EXISTS `v_canciones_genero`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `v_canciones_genero` (
+  `id` tinyint NOT NULL,
+  `nombre` tinyint NOT NULL,
+  `id_disco` tinyint NOT NULL,
+  `url` tinyint NOT NULL,
+  `rating` tinyint NOT NULL,
+  `genero` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `v_canciones_genero`
+--
+
+/*!50001 DROP TABLE IF EXISTS `v_canciones_genero`*/;
+/*!50001 DROP VIEW IF EXISTS `v_canciones_genero`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = latin1 */;
+/*!50001 SET character_set_results     = latin1 */;
+/*!50001 SET collation_connection      = latin1_swedish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `v_canciones_genero` AS select `c`.`id` AS `id`,`c`.`nombre` AS `nombre`,`c`.`id_disco` AS `id_disco`,`c`.`url` AS `url`,`c`.`rating` AS `rating`,`c`.`genero` AS `genero` from `canciones` `c` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -131,4 +165,4 @@ CREATE TABLE `grupos_discos` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-02-29 17:20:49
+-- Dump completed on 2016-04-16 19:03:20
