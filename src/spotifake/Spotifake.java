@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 
 /**
  *
+ * @version 1.4
  * @author Fernando
  * @since V 0.1
  */
@@ -21,6 +22,6 @@ public class Spotifake extends Application {
      */
     public static void main(String[] args) {
         gui g = new gui();
-        g.show();
+        g.setVisible(true);
     }
 }

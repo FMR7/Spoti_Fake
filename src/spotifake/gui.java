@@ -10,7 +10,7 @@ import Pojos.Autor;
 import Pojos.Cancion;
 import Pojos.Disco;
 import Pojos.Grupo;
-import com.persistence.ConfigFiles;
+import fmr.persistence.ConfigFiles;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import resources.icons.img; //import images for the gui
 /**
  *
  * @author Fernando
- * @since V 1.3
+ * @since V 0.1
  */
 public class gui extends javax.swing.JFrame {
     public static int current_song_id = 1;
@@ -42,7 +42,7 @@ public class gui extends javax.swing.JFrame {
     public static boolean showing_songs = false;
     public static boolean showing_autores = false;
     
-    private static boolean debug = true;
+    private static final boolean debug = true;
     img im = new img();
     
     String track_list[]; //array de strings con las direcciones de las canciones
@@ -98,7 +98,6 @@ public class gui extends javax.swing.JFrame {
             cf.newFile("LANG", newProperties, "Language configuration.");
             
             Properties loadFile = cf.loadFile("LANG", debug);
-            //System.out.println("LANG: " + loadFile.getProperty("lang"));
             loadLang(loadFile.getProperty("lang"));
             
             

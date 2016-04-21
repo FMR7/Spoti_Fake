@@ -4,6 +4,7 @@ import Pojos.Autor;
 import Pojos.Cancion;
 import Pojos.Disco;
 import Pojos.Grupo;
+import fmr.persistence.ConfigFiles;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +34,8 @@ import javax.swing.JOptionPane;
  */
 public class db {
 
-    private final String host, port, database, user, pass;
+    private String host , port, database, user, pass;
+    private String dbConnection;
     
     Connection conexion;
     PreparedStatement s;
@@ -43,11 +46,28 @@ public class db {
      * Default constructor.
      */
     public db(){
-        this.host = "127.0.0.1";
-        this.port = "3306";
-        this.database = "musica";
-        this.user = "root";
-        this.pass = "";
+        Properties newProperties = new Properties();
+        newProperties.setProperty("HOST", "127.0.0.1");
+        newProperties.setProperty("PORT", "3306");
+        newProperties.setProperty("DB", "musica");
+        newProperties.setProperty("USER", "root");
+        newProperties.setProperty("PASS", "");
+
+        ConfigFiles cf = new ConfigFiles();
+        cf.newFile("DB_Data", newProperties, "Database connection data.");
+
+        Properties loadFile = cf.loadFile("DB_Data", true);
+        if(loadFile != null){
+            this.host = loadFile.getProperty("HOST");
+            this.port = loadFile.getProperty("PORT");
+            this.database = loadFile.getProperty("DB");
+            this.user = loadFile.getProperty("USER");
+            this.pass = loadFile.getProperty("PASS");
+
+            this.dbConnection = "jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database;
+        }else{
+            JOptionPane.showMessageDialog(null, "Connection DB data file not found: DB_Data.conf");
+        }
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
@@ -65,7 +85,7 @@ public class db {
         List <Cancion> c = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select c.* from canciones c order by c.nombre");
             rs = s.executeQuery();
 
@@ -96,7 +116,7 @@ public class db {
         Cancion c = null;
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select * from canciones where id = ?");
             s.setInt(1, id);
             rs = s.executeQuery();
@@ -126,7 +146,7 @@ public class db {
         List <Cancion> c = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select c.* from discos d join canciones c ON d.id = c.id_disco where d.id = ?");
             s.setInt(1, id_disco);
             rs = s.executeQuery();
@@ -155,7 +175,7 @@ public class db {
     public List<Cancion> get_canciones_autor(int id_autor){
         List <Cancion> c = new ArrayList<>();
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select c.* from autores_canciones ac "
                     + "inner join autores a ON ac.id_autor = a.id "
                     + "inner join canciones c ON ac.id_cancion = c.id where a.id = ?");
@@ -188,7 +208,7 @@ public class db {
     public List<Cancion> get_canciones_genero(String genero){
         List <Cancion> c = new ArrayList<>();
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select * from v_canciones_genero where genero = ?");
             s.setString(1, genero);
             rs = s.executeQuery();
@@ -220,7 +240,7 @@ public class db {
         List <Grupo> g = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select * from grupos");
             rs = s.executeQuery();
 
@@ -250,7 +270,7 @@ public class db {
     public String get_grupo(int id_cancion){
         String str = "";
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select g.nombre from canciones c inner join grupos_discos gd on gd.id_disco = c.id_disco join grupos g ON g.id = gd.id_grupo where c.id_disco = ?");
             s.setInt(1, id_cancion);
             rs = s.executeQuery();
@@ -283,7 +303,7 @@ public class db {
         List <Disco> d = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select d.id, d.nombre, d.fecha, d.url_img from grupos_discos gd inner join grupos g ON gd.id_grupo = g.id inner join discos d ON gd.id_disco = d.id where g.id = ?");
             s.setInt(1, id_grupo);
             rs = s.executeQuery();
@@ -315,7 +335,7 @@ public class db {
         String d = "";
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select d.nombre from discos d, canciones c where c.id_disco = ?");
             s.setInt(1, id_cancion);
             rs = s.executeQuery();
@@ -346,7 +366,7 @@ public class db {
         List <Disco> d = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select d.id, d.nombre, d.fecha, d.url_img from discos d");
             rs = s.executeQuery();
 
@@ -377,7 +397,7 @@ public class db {
         ImageIcon icon = null;
         String url = "";
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select d.url_img from discos d where d.id = ?");
             s.setInt(1, id_disco);
             rs = s.executeQuery();
@@ -418,7 +438,7 @@ public class db {
     public String get_disco_nombre(int id_cancion){
         String d = "";
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select d.nombre from canciones c inner join discos d ON c.id_disco = d.id where c.id = ?");
             s.setInt(1, id_cancion);
             rs = s.executeQuery();
@@ -449,7 +469,7 @@ public class db {
         List <Autor> a = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select a.id, a.nombre from autores a");
             rs = s.executeQuery();
 
@@ -480,7 +500,7 @@ public class db {
         List <String> a = new ArrayList<>();
         String str = "";
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select a.nombre from canciones c inner join autores_canciones ac ON c.id = ac.id_cancion inner join autores a on ac.id_autor = a.id where c.id = ?");
             s.setInt(1, id_cancion);
             rs = s.executeQuery();
@@ -520,7 +540,7 @@ public class db {
         List <String> a = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select c.genero FROM canciones c group by c.genero");
             rs = s.executeQuery();
 
@@ -552,7 +572,7 @@ public class db {
         List <Cancion> c = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select c.id, c.nombre, c.id_disco, c.url, c.rating, c.genero from canciones c where c.nombre like ?");
             s.setString(1, "%" + nombre + "%");
             rs = s.executeQuery();
@@ -584,7 +604,7 @@ public class db {
         List <Disco> d = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select d.id, d.nombre, d.fecha, d.url_img from discos d where d.nombre like ?");
             s.setString(1, "%" + nombre + "%");
             rs = s.executeQuery();
@@ -616,7 +636,7 @@ public class db {
         List <String> a = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select c.genero FROM canciones c where c.genero like ? group by c.genero");
             s.setString(1, "%" + nombre + "%");
             rs = s.executeQuery();
@@ -648,7 +668,7 @@ public class db {
         List <Grupo> g = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select * from grupos where nombre like ?");
             s.setString(1, "%" + nombre + "%");
             rs = s.executeQuery();
@@ -680,7 +700,7 @@ public class db {
         List <Autor> a = new ArrayList<>();
         
         try{
-            conexion = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, pass);
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
             s = conexion.prepareStatement("select a.id, a.nombre from autores a where a.nombre like ?");
             s.setString(1, "%" + nombre + "%");
             rs = s.executeQuery();
