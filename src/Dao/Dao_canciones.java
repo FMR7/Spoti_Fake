@@ -115,7 +115,7 @@ public class Dao_canciones {
     }
     
     /**
-     * Shows album image & fills node tree with songs from album.
+     * Shows album image and fills node tree with songs from album.
      * @param id_disco 
      */
     public void fill_song_names_by_album(int id_disco){

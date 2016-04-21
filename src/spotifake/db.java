@@ -147,7 +147,7 @@ public class db {
         
         try{
             conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
-            s = conexion.prepareStatement("select c.* from discos d join canciones c ON d.id = c.id_disco where d.id = ?");
+            s = conexion.prepareStatement("select * from v_canciones_disco where id_disco = ?");
             s.setInt(1, id_disco);
             rs = s.executeQuery();
 
@@ -176,9 +176,7 @@ public class db {
         List <Cancion> c = new ArrayList<>();
         try{
             conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
-            s = conexion.prepareStatement("select c.* from autores_canciones ac "
-                    + "inner join autores a ON ac.id_autor = a.id "
-                    + "inner join canciones c ON ac.id_cancion = c.id where a.id = ?");
+            s = conexion.prepareStatement("select * from v_canciones_autor where id_autor = ?");
             s.setInt(1, id_autor);
             rs = s.executeQuery();
 
@@ -271,7 +269,7 @@ public class db {
         String str = "";
         try{
             conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
-            s = conexion.prepareStatement("select g.nombre from canciones c inner join grupos_discos gd on gd.id_disco = c.id_disco join grupos g ON g.id = gd.id_grupo where c.id_disco = ?");
+            s = conexion.prepareStatement("select * from v_grupo_cancion where id_disco = ? limit 1");
             s.setInt(1, id_cancion);
             rs = s.executeQuery();
 
@@ -304,45 +302,13 @@ public class db {
         
         try{
             conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
-            s = conexion.prepareStatement("select d.id, d.nombre, d.fecha, d.url_img from grupos_discos gd inner join grupos g ON gd.id_grupo = g.id inner join discos d ON gd.id_disco = d.id where g.id = ?");
+            s = conexion.prepareStatement("select * from v_discos_grupo where id_grupo = ?");
             s.setInt(1, id_grupo);
             rs = s.executeQuery();
 
             while(rs.next())
             {
                 d.add(new Disco(rs.getInt(1), rs.getString(2), rs.getDate(3), rs.getString(4)));
-            }
-            
-            rs.close();
-            s.close();
-            conexion.close();
-        }
-        catch(SQLException ex){
-            System.out.println("WARNING: No connection to DB.");
-            JOptionPane.showMessageDialog(null, "No connection to DB.");
-            ex.printStackTrace();
-        }
-        
-        return(d);
-    }
-    
-    /**
-     * 
-     * @param id_cancion
-     * @return The album name for the given song id.
-     */
-    public String get_discos_nombre(int id_cancion){
-        String d = "";
-        
-        try{
-            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
-            s = conexion.prepareStatement("select d.nombre from discos d, canciones c where c.id_disco = ?");
-            s.setInt(1, id_cancion);
-            rs = s.executeQuery();
-
-            while(rs.next())
-            {
-                d = rs.getString(1);
             }
             
             rs.close();
@@ -439,7 +405,7 @@ public class db {
         String d = "";
         try{
             conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
-            s = conexion.prepareStatement("select d.nombre from canciones c inner join discos d ON c.id_disco = d.id where c.id = ?");
+            s = conexion.prepareStatement("select * from v_disco_nombre where id_cancion = ?");
             s.setInt(1, id_cancion);
             rs = s.executeQuery();
 
@@ -501,7 +467,7 @@ public class db {
         String str = "";
         try{
             conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
-            s = conexion.prepareStatement("select a.nombre from canciones c inner join autores_canciones ac ON c.id = ac.id_cancion inner join autores a on ac.id_autor = a.id where c.id = ?");
+            s = conexion.prepareStatement("select * from v_autores_cancion where id_cancion = ?");
             s.setInt(1, id_cancion);
             rs = s.executeQuery();
 
