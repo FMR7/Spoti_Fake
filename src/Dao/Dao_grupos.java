@@ -22,7 +22,7 @@ public class Dao_grupos {
      * Default constructor.
      */
     public Dao_grupos() {
-        this.raiz = new DefaultMutableTreeNode("Grupos");
+        this.raiz = new DefaultMutableTreeNode("\\");
         this.DB = new db();
     }
     

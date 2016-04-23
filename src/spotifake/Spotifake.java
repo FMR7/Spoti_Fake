@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @version 1.5
+ * @version 1.6
  * @author Fernando
  * @since V 0.1
  */

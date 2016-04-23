@@ -86,10 +86,7 @@ public class gui extends javax.swing.JFrame {
             jButton4.setBorderPainted(false);
             jButton4.setIcon((ImageIcon) im.ini("unmute.png"));
             
-            jComboBox1.setSelectedIndex(0);
-            
             gui.ply = new Player();
-            
             
             Properties newProperties = new Properties();
             newProperties.setProperty("lang", "ES");
@@ -99,8 +96,7 @@ public class gui extends javax.swing.JFrame {
             
             Properties loadFile = cf.loadFile("LANG", debug);
             loadLang(loadFile.getProperty("lang"));
-            
-            
+            jComboBox1.setSelectedIndex(0);
         } catch (Exception ex) {
             System.out.println("WARNING CAN'T LOAD RESOURCES");
             ex.printStackTrace();
@@ -346,7 +342,6 @@ public class gui extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Canciones", "Grupos", "Autores", "Discos", "Generos" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -444,26 +439,38 @@ public class gui extends javax.swing.JFrame {
 
     //FUNCTIONS INI ------------------------------------------------------------
     private static String jTFSearch, jLab1, jLab2, jLab3, jLab4, jLab5, jLab6;
+    private static String[] combo;
+    
+    /**
+     * 
+     * Load language from file.
+     * @param lang Language
+     */
     private static void loadLang(String lang){
         if(!"".equals(lang)){
             ConfigFiles cf = new ConfigFiles();
-            Properties loadFile;
+            Properties loadFile = cf.loadFile(lang, debug);
             switch(lang){
                 case "ES":
-                    loadFile = cf.loadFile(lang, debug);
+                    jRadioButtonMenuItemES.setSelected(true);
+                    jRadioButtonMenuItemEN.setSelected(false);
                     jMenu1.setText("Idioma");
                     jMenu2.setText("Ayuda");
                     jMenuItem1.setText("Acerca de SpotiFake");
                     break;
                 case "EN":
-                    loadFile = cf.loadFile(lang, debug);
+                    jRadioButtonMenuItemES.setSelected(false);
+                    jRadioButtonMenuItemEN.setSelected(true);
                     jMenu1.setText("Language");
                     jMenu2.setText("Help");
-                    jMenuItem1.setText("About");
+                    jMenuItem1.setText("About SpotiFake");
                     break;
-
                 default:
-                    loadFile = cf.loadFile("EN", debug);
+                    jRadioButtonMenuItemES.setSelected(false);
+                    jRadioButtonMenuItemEN.setSelected(true);
+                    jMenu1.setText("Language");
+                    jMenu2.setText("Help");
+                    jMenuItem1.setText("About SpotiFake");
                     break;
             }
             
@@ -474,11 +481,15 @@ public class gui extends javax.swing.JFrame {
             jLab4 = loadFile.getProperty("jLab4");
             jLab5 = loadFile.getProperty("jLab5");
             jLab6 = loadFile.getProperty("jLab6");
-            
+            combo = loadFile.getProperty("combo").split(",");
             setLang();
         }
     }
     
+    /**
+     * 
+     * Set language on the interface
+     */
     private static void setLang(){
         jTextField1.setText(jTFSearch);
         jLabel1.setText(jLab1);
@@ -487,7 +498,10 @@ public class gui extends javax.swing.JFrame {
         jLabel4.setText(jLab4);
         jLabel5.setText(jLab5);
         jLabel6.setText(jLab6);
-        
+        jComboBox1.removeAllItems();
+        for(int i = 0; i < combo.length; i++){
+            jComboBox1.addItem(combo[i]);
+        }
         
     }
     
@@ -542,13 +556,16 @@ public class gui extends javax.swing.JFrame {
             //Play clicked song
             Cancion c = new db().get_cancion(sel_id);
             ply.set_song_remote(c.getUrl());
-            
             load_data(c);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    /**
+     * 
+     * Load the selected album and call load_clicked_song().
+     */
     public static void load_clicked_album(){
         if(showing_songs == false){
             String str = jTree1.getSelectionModel().getSelectionPath().toString();
@@ -660,7 +677,7 @@ public class gui extends javax.swing.JFrame {
         ply.mute();
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    //OK
+    //Tree panel
     private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
         // TODO add your handling code here:
         String str1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
@@ -671,93 +688,58 @@ public class gui extends javax.swing.JFrame {
         }catch(Exception ex){
             //tp equals null
         }
-        switch(str1){
-            case "Canciones": //Finish
-                if(tp == null){ //It's the root node
+        if(tp != null){
+            if(str1.equals(combo[0])){
+                load_clicked_song();
+            }if(str1.equals(combo[1])){
+                if(showing_discos == false){
+                    String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                    String s[] = str.split(",");
+                    String n = s[1].substring(1, s[1].length()-1);
+                    System.out.println("Clicked Group: " + n);
+                    System.out.println("Albums:");
 
-                }else{ 
-                    load_clicked_song();
-                }
-                
-                break;
-            case "Grupos": //Not Finish
-                if(tp == null){ //It's the root node
+                    int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                    int sel_id = st_grupos.get(sel[0]-1).getId();
 
-                }else{ 
-                    if(showing_discos == false){
-                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
-                        String s[] = str.split(",");
-                        String n = s[1].substring(1, s[1].length()-1);
-                        System.out.println("Clicked Group: " + n);
-                        System.out.println("Albums:");
-                        
-                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                        int sel_id = st_grupos.get(sel[0]-1).getId();
-
-                        new Dao_discos(n).fill_album_names_by_group(sel_id);
-                        showing_discos = true;
-                    }else{ //Show album songs in main panel <---------------------------------
-                        load_clicked_album();
-                    }
-                }
-                break;
-            case "Autores": //Finish
-                if(tp == null){ //It's the root node
-
-                }else{ 
-                    if(showing_autores == false){
-                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
-                        String s[] = str.split(",");
-                        String n = s[1].substring(1, s[1].length()-1);
-                        System.out.println("Clicked Autor: " + n);
-                        
-                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                        int sel_id = st_autores.get(sel[0]-1).getId();
-                        
-                        new Dao_canciones(n,1).fill_song_names_by_autor(sel_id);
-                        showing_autores = true;
-                    } else{
-                            load_clicked_song();
-                    }
-                }
-                
-                break;
-            case "Discos": //Finish
-                if(tp == null){
-
-                }else{ 
+                    new Dao_discos(n).fill_album_names_by_group(sel_id);
+                    showing_discos = true;
+                }else{
                     load_clicked_album();
                 }
-                break;
-            case "Generos": //Finish
-                if(tp == null){ //It's the root node
+            }if(str1.equals(combo[2])){
+                if(showing_autores == false){
+                    String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                    String s[] = str.split(",");
+                    String n = s[1].substring(1, s[1].length()-1);
+                    System.out.println("Clicked Autor: " + n);
 
-                }else{ 
-                    if(showing_autores == false){
-                        String str = jTree1.getSelectionModel().getSelectionPath().toString();
-                        String s[] = str.split(",");
-                        String n = s[1].substring(1, s[1].length()-1);
-                        System.out.println("Clicked genero: " + n);
-                        
-                        int[] sel = jTree1.getSelectionModel().getSelectionRows();
-                        String sel_gen = st_generos.get(sel[0]-1);
-                        
-                        new Dao_canciones(n,1).fill_song_names_by_gendre(sel_gen);
-                        showing_autores = true;
-                    } else{
-                            load_clicked_song();
-                    }
-                }
-                
-                break;
-            default:
-                if(tp == null){ //It's the root node
+                    int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                    int sel_id = st_autores.get(sel[0]-1).getId();
 
-                }else{ 
+                    new Dao_canciones(n,1).fill_song_names_by_autor(sel_id);
+                    showing_autores = true;
+                } else{
                     load_clicked_song();
                 }
-                break;
-            
+            }if(str1.equals(combo[3])){
+                load_clicked_album();
+            }if(str1.equals(combo[4])){
+                if(showing_autores == false){
+                    String str = jTree1.getSelectionModel().getSelectionPath().toString();
+                    String s[] = str.split(",");
+                    String n = s[1].substring(1, s[1].length()-1);
+                    System.out.println("Clicked genero: " + n);
+
+                    int[] sel = jTree1.getSelectionModel().getSelectionRows();
+                    String sel_gen = st_generos.get(sel[0]-1);
+
+                    new Dao_canciones(n,1).fill_song_names_by_gendre(sel_gen);
+                    showing_autores = true;
+                } else{
+                    load_clicked_song();
+                }
+            }
         }
     }//GEN-LAST:event_jTree1MouseClicked
 
@@ -770,40 +752,26 @@ public class gui extends javax.swing.JFrame {
     //Filter changed.
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
-        showing_discos = false;
-        showing_autores = false;
-        showing_songs = false;
-        jTextField1.setText(jTFSearch);
-        
-        String s = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
-        System.out.println("\nComboBox: " + s);
-        clear_tree();
-        switch(s){
-            case "Canciones":
+        if(jComboBox1.getSelectedItem() != null){
+            showing_discos = false;
+            showing_autores = false;
+            showing_songs = false;
+            jTextField1.setText(jTFSearch);
+
+            String s = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+            System.out.println("\nComboBox: " + s);
+            clear_tree();
+            if(s.equals(combo[0])){
                 new Dao_canciones().fill_song_names();
-                
-                break;
-            case "Grupos":
+            }if(s.equals(combo[1])){
                 new Dao_grupos().fill_group_names();
-                
-                break;
-            case "Autores":
+            }if(s.equals(combo[2])){
                 new Dao_autores().fill_autor_names();
-                
-                break;
-            case "Discos":
+            }if(s.equals(combo[3])){
                 new Dao_discos().fill_album_names();
-                
-                break;
-            case "Generos":
+            }if(s.equals(combo[4])){
                 new Dao_generos().fill_genero_names();
-                
-                break;
-            default:
-                new Dao_canciones().fill_song_names();
-                
-                break;
-            
+            }
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
     
@@ -861,11 +829,18 @@ public class gui extends javax.swing.JFrame {
     //Lang ES
     private void jRadioButtonMenuItemESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItemESActionPerformed
         // TODO add your handling code here:
+        ConfigFiles cf = new ConfigFiles();
+        Properties loadFile = cf.loadFile("LANG", debug);
         if(jRadioButtonMenuItemES.isSelected()){
             jRadioButtonMenuItemEN.setSelected(false);
             loadLang("ES");
+            loadFile.setProperty("lang", "ES");
+            cf.updateFile("LANG", loadFile, "Language configuration.");
         }else{
             jRadioButtonMenuItemEN.setSelected(true);
+            loadLang("EN");
+            loadFile.setProperty("lang", "EN");
+            cf.updateFile("LANG", loadFile, "Language configuration.");
         }
         
     }//GEN-LAST:event_jRadioButtonMenuItemESActionPerformed
@@ -873,11 +848,18 @@ public class gui extends javax.swing.JFrame {
     //Lang EN
     private void jRadioButtonMenuItemENActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItemENActionPerformed
         // TODO add your handling code here:
+        ConfigFiles cf = new ConfigFiles();
+        Properties loadFile = cf.loadFile("LANG", debug);
         if(jRadioButtonMenuItemEN.isSelected()){
             jRadioButtonMenuItemES.setSelected(false);
             loadLang("EN");
+            loadFile.setProperty("lang", "EN");
+            cf.updateFile("LANG", loadFile, "Language configuration.");
         }else{
             jRadioButtonMenuItemES.setSelected(true);
+            loadLang("ES");
+            loadFile.setProperty("lang", "ES");
+            cf.updateFile("LANG", loadFile, "Language configuration.");
         }
     }//GEN-LAST:event_jRadioButtonMenuItemENActionPerformed
     
@@ -930,7 +912,7 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     public static javax.swing.JButton jButton4;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private static javax.swing.JComboBox<String> jComboBox1;
     private static javax.swing.JLabel jLabel1;
     private static javax.swing.JLabel jLabel2;
     private static javax.swing.JLabel jLabel3;
@@ -948,8 +930,8 @@ public class gui extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private static javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItemEN;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItemES;
+    private static javax.swing.JRadioButtonMenuItem jRadioButtonMenuItemEN;
+    private static javax.swing.JRadioButtonMenuItem jRadioButtonMenuItemES;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

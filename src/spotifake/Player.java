@@ -95,6 +95,7 @@ public class Player extends Thread{
 
             mp = new MediaPlayer(m);
             play_song();
+            gui.jButton4.setIcon((ImageIcon) im.ini("unmute.png"));
         }
     }
     

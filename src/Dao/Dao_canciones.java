@@ -1,7 +1,9 @@
 package Dao;
 
 import Pojos.Cancion;
+import fmr.persistence.ConfigFiles;
 import java.util.List;
+import java.util.Properties;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import spotifake.db;
@@ -23,7 +25,7 @@ public class Dao_canciones {
      * Default constructor.
      */
     public Dao_canciones() {
-        this.raiz = new DefaultMutableTreeNode("Canciones");
+        this.raiz = new DefaultMutableTreeNode("\\");
         this.DB = new db();
     }
     
@@ -34,13 +36,24 @@ public class Dao_canciones {
      * @param n 1 = canción, 2 = disco
      */
     public Dao_canciones(String name, int n) {
+        ConfigFiles cf = new ConfigFiles();
+        Properties loadFile = cf.loadFile("LANG", true);
+        String lang = loadFile.getProperty("lang");
         switch (n){
             case 1:
-                this.raiz = new DefaultMutableTreeNode("Canciones de " + name);
+                if("ES".equals(lang)){
+                    this.raiz = new DefaultMutableTreeNode("Canciones de " + name);
+                }else{
+                    this.raiz = new DefaultMutableTreeNode(name + " songs");
+                }
                 this.DB = new db();
                 break;
             case 2:
-                this.raiz = new DefaultMutableTreeNode("Disco: " + name);
+                if("EN".equals(lang)){
+                    this.raiz = new DefaultMutableTreeNode("Album: " + name);
+                }else{
+                    this.raiz = new DefaultMutableTreeNode("Disco: " + name);
+                }
                 this.DB = new db();
                 break;
         }

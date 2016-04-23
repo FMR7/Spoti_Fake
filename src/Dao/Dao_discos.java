@@ -22,7 +22,7 @@ public class Dao_discos {
      * Default constructor.
      */
     public Dao_discos() {
-        this.raiz = new DefaultMutableTreeNode("Discos");
+        this.raiz = new DefaultMutableTreeNode("\\");
         this.DB = new db();
     }
     
@@ -32,7 +32,7 @@ public class Dao_discos {
      * @param name 
      */
     public Dao_discos(String name) {
-        this.raiz = new DefaultMutableTreeNode("Discos de " + name);
+        this.raiz = new DefaultMutableTreeNode(name);
         this.DB = new db();
     }
     

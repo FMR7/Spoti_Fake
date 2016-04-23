@@ -22,7 +22,7 @@ public class Dao_autores {
      * Default constructor.
      */
     public Dao_autores() {
-        this.raiz = new DefaultMutableTreeNode("Autores");
+        this.raiz = new DefaultMutableTreeNode("\\");
         this.DB = new db();
     }
     

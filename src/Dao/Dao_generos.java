@@ -22,7 +22,7 @@ public class Dao_generos {
      * Default constructor.
      */
     public Dao_generos() {
-        this.raiz = new DefaultMutableTreeNode("Géneros");
+        this.raiz = new DefaultMutableTreeNode("\\");
         this.DB = new db();
     }
     
