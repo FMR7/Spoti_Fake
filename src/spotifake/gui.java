@@ -11,6 +11,7 @@ import Pojos.Cancion;
 import Pojos.Disco;
 import Pojos.Grupo;
 import fmr.persistence.ConfigFiles;
+import java.awt.Color;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -88,15 +90,24 @@ public class gui extends javax.swing.JFrame {
             
             gui.ply = new Player();
             
+            //CREATE CONFIG FILES
+            //-Language
             Properties newProperties = new Properties();
             newProperties.setProperty("lang", "ES");
-            
             ConfigFiles cf = new ConfigFiles();
             cf.newFile("LANG", newProperties, "Language configuration.");
-            
             Properties loadFile = cf.loadFile("LANG", debug);
             loadLang(loadFile.getProperty("lang"));
             jComboBox1.setSelectedIndex(0);
+            
+            //-GUI color
+            newProperties.clear();
+            newProperties.setProperty("color", "white");
+            cf.newFile("color", newProperties, "GUI skin color.");
+            Properties loadFile1 = cf.loadFile("color");
+            String color = loadFile1.getProperty("color");
+            setColor(color);
+            
         } catch (Exception ex) {
             System.out.println("WARNING CAN'T LOAD RESOURCES");
             ex.printStackTrace();
@@ -142,6 +153,9 @@ public class gui extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jRadioButtonMenuItemES = new javax.swing.JRadioButtonMenuItem();
         jRadioButtonMenuItemEN = new javax.swing.JRadioButtonMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
@@ -369,6 +383,26 @@ public class gui extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
+        jMenu3.setText("Color");
+
+        jMenuItem2.setText("Light Blue");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem2);
+
+        jMenuItem3.setText("White");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem3);
+
+        jMenuBar1.add(jMenu3);
+
         jMenu2.setText("Help");
 
         jMenuItem1.setText("About");
@@ -441,6 +475,39 @@ public class gui extends javax.swing.JFrame {
     private static String jTFSearch, jLab1, jLab2, jLab3, jLab4, jLab5, jLab6;
     private static String[] combo;
     
+    private void setColor(String color){
+        if(!"".equals(color)){
+            Color c = null;
+            Properties prp = new Properties();
+            switch(color){
+                case "white":
+                    c = new Color(240,240,240);
+                    prp.setProperty("color", "white");
+                    break;
+                case "lightBlue":
+                    c = new Color(170,200,255);
+                    prp.setProperty("color", "lightBlue");
+                    break;
+                default:
+                    c = new Color(240,240,240);
+                    prp.setProperty("color", "white");
+                    break;
+            }
+            this.getContentPane().setBackground(c);
+            this.jPanel1.setBackground(c);
+            gui.jTextArea_song_author.setBackground(c);
+            gui.jTextField1.setBackground(c);
+            gui.jTree1.setBackground(c);
+            final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)(gui.jTree1.getCellRenderer());
+            renderer.setBackgroundNonSelectionColor(c);
+            //renderer.setBackgroundSelectionColor(Color.ORANGE);
+            //renderer.setTextNonSelectionColor(Color.RED);
+            //renderer.setTextSelectionColor(Color.BLUE);
+            ConfigFiles cf = new ConfigFiles();
+            cf.updateFile("color", prp, "GUI skin color.");
+        }
+    }
+    
     /**
      * 
      * Load language from file.
@@ -456,6 +523,8 @@ public class gui extends javax.swing.JFrame {
                     jRadioButtonMenuItemEN.setSelected(false);
                     jMenu1.setText("Idioma");
                     jMenu2.setText("Ayuda");
+                    jMenuItem2.setText("Azul Claro");
+                    jMenuItem3.setText("Blanco");
                     jMenuItem1.setText("Acerca de SpotiFake");
                     break;
                 case "EN":
@@ -463,6 +532,8 @@ public class gui extends javax.swing.JFrame {
                     jRadioButtonMenuItemEN.setSelected(true);
                     jMenu1.setText("Language");
                     jMenu2.setText("Help");
+                    jMenuItem2.setText("LightBlue");
+                    jMenuItem3.setText("White");
                     jMenuItem1.setText("About SpotiFake");
                     break;
                 default:
@@ -862,6 +933,14 @@ public class gui extends javax.swing.JFrame {
             cf.updateFile("LANG", loadFile, "Language configuration.");
         }
     }//GEN-LAST:event_jRadioButtonMenuItemENActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        setColor("lightBlue");
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        setColor("white");
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
     
     
     //EVENTS END _______________________________________________________________
@@ -927,8 +1006,11 @@ public class gui extends javax.swing.JFrame {
     public static javax.swing.JLabel jLabel_song_name;
     private static javax.swing.JMenu jMenu1;
     private static javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private static javax.swing.JMenuItem jMenuItem1;
+    private static javax.swing.JMenuItem jMenuItem2;
+    private static javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private static javax.swing.JRadioButtonMenuItem jRadioButtonMenuItemEN;
     private static javax.swing.JRadioButtonMenuItem jRadioButtonMenuItemES;
