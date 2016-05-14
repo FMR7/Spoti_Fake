@@ -1,13 +1,9 @@
 package spotifake;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Paths;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import resources.icons.img;
-import static spotifake.gui.jLabel_album_img;
 
 /**
  *
@@ -22,7 +18,6 @@ public class Player extends Thread{
     private boolean audio;
     private boolean isPlaying;
     
-    private final img im;
     
     /**
      * 
@@ -32,7 +27,6 @@ public class Player extends Thread{
         this.curr_song = "";
         this.audio = true;
         this.isPlaying = false;
-        this.im = new img();
     }
     
     /**
@@ -46,17 +40,19 @@ public class Player extends Thread{
     /**
      * 
      * User action: Mute and unmute.
+     * @return true when muted, false if unmuted.
      */
-    public void mute(){
+    public boolean mute(){
+        boolean b = false;
         if(audio == true){
-            gui.jButton4.setIcon((ImageIcon) im.ini("mute.png"));
+            b = true;
             mp.setMute(true);
             audio = false;
         }else{
-            gui.jButton4.setIcon((ImageIcon) im.ini("unmute.png"));
             mp.setMute(false);
             audio = true;
         }
+        return b;
     }
     
     /**
@@ -95,7 +91,6 @@ public class Player extends Thread{
 
             mp = new MediaPlayer(m);
             play_song();
-            gui.jButton4.setIcon((ImageIcon) im.ini("unmute.png"));
         }
     }
     
@@ -107,7 +102,6 @@ public class Player extends Thread{
         if(!"".equals(curr_song)){
             mp.play();
             isPlaying = true;
-            gui.jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
             gui.jToggleButton1.setSelected(true);
             
             //EVENTS
@@ -168,8 +162,6 @@ public class Player extends Thread{
         if(!"".equals(curr_song)){
             mp.stop();
             isPlaying = false;
-            gui.jToggleButton1.setIcon((ImageIcon) im.ini("play_s.png"));
-            gui.jToggleButton1.setSelected(false);
             curr_song = "";
         }
     }

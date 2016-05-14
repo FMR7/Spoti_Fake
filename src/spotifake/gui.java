@@ -11,8 +11,8 @@ import Pojos.Cancion;
 import Pojos.Disco;
 import Pojos.Grupo;
 import fmr.persistence.ConfigFiles;
-import java.awt.Color;
 
+import java.awt.Color;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +45,10 @@ public class gui extends javax.swing.JFrame {
     public static boolean showing_autores = false;
     
     private static final boolean debug = true;
-    img im = new img();
+    private static img im = new img();
     
-    String track_list[]; //array de strings con las direcciones de las canciones
-    List<String> urls = new ArrayList<>();
+    private String track_list[]; //array de strings con las direcciones de las canciones
+    private List<String> urls = new ArrayList<>();
     
     public static Player ply;
     
@@ -61,32 +61,7 @@ public class gui extends javax.swing.JFrame {
         initComponents();
         
         try {
-            setIconImage(getToolkit().getImage(getClass().getResource("/resources/icons/play_s.png")));
-            
-            jButton1.setOpaque(false);
-            jButton1.setContentAreaFilled(false);
-            jButton1.setBorderPainted(false);
-            jButton1.setIcon((ImageIcon) im.ini("stop_s.png"));
-
-            jToggleButton1.setOpaque(false);
-            jToggleButton1.setContentAreaFilled(false);
-            jToggleButton1.setBorderPainted(false);
-            jToggleButton1.setIcon((ImageIcon) im.ini("play_s.png"));
-            
-            jButton2.setOpaque(false);
-            jButton2.setContentAreaFilled(false);
-            jButton2.setBorderPainted(false);
-            jButton2.setIcon((ImageIcon) im.ini("back_s.png"));
-            
-            jButton3.setOpaque(false);
-            jButton3.setContentAreaFilled(false);
-            jButton3.setBorderPainted(false);
-            jButton3.setIcon((ImageIcon) im.ini("next_s.png"));
-            
-            jButton4.setOpaque(false);
-            jButton4.setContentAreaFilled(false);
-            jButton4.setBorderPainted(false);
-            jButton4.setIcon((ImageIcon) im.ini("unmute.png"));
+            setIconImage(getToolkit().getImage(getClass().getResource("/resources/icons/black/play_s.png")));
             
             gui.ply = new Player();
             
@@ -106,11 +81,11 @@ public class gui extends javax.swing.JFrame {
             cf.newFile("color", newProperties, "GUI skin color.");
             Properties loadFile1 = cf.loadFile("color");
             String color = loadFile1.getProperty("color");
+            Color = color;
             setColor(color);
             
         } catch (Exception ex) {
             System.out.println("WARNING CAN'T LOAD RESOURCES");
-            ex.printStackTrace();
         }
     }
     
@@ -385,7 +360,7 @@ public class gui extends javax.swing.JFrame {
 
         jMenu3.setText("Color");
 
-        jMenuItem2.setText("Light Blue");
+        jMenuItem2.setText("Black");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -475,36 +450,101 @@ public class gui extends javax.swing.JFrame {
     private static String jTFSearch, jLab1, jLab2, jLab3, jLab4, jLab5, jLab6;
     private static String[] combo;
     
-    private void setColor(String color){
-        if(!"".equals(color)){
-            Color c = null;
+    private void setColor(String bgColor){
+        Color txtColor = new Color(0,0,0);
+        //Icons
+        jButton1.setOpaque(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setBorderPainted(false);
+
+        jToggleButton1.setOpaque(false);
+        jToggleButton1.setContentAreaFilled(false);
+        jToggleButton1.setBorderPainted(false);
+
+        jButton2.setOpaque(false);
+        jButton2.setContentAreaFilled(false);
+        jButton2.setBorderPainted(false);
+
+        jButton3.setOpaque(false);
+        jButton3.setContentAreaFilled(false);
+        jButton3.setBorderPainted(false);
+
+        jButton4.setOpaque(false);
+        jButton4.setContentAreaFilled(false);
+        jButton4.setBorderPainted(false);
+        
+        //Set Colors and Icons
+        if(!"".equals(bgColor)){
+            Color c;
             Properties prp = new Properties();
-            switch(color){
+            switch(bgColor){
                 case "white":
                     c = new Color(240,240,240);
+                    txtColor = new Color(0,0,0);
+                    jButton1.setIcon((ImageIcon) im.ini("white/stop_s.png"));
+                    jButton2.setIcon((ImageIcon) im.ini("white/back_s.png"));
+                    jButton3.setIcon((ImageIcon) im.ini("white/next_s.png"));
+                    jButton4.setIcon((ImageIcon) im.ini("white/unmute.png"));
                     prp.setProperty("color", "white");
+                    Color = "white";
                     break;
-                case "lightBlue":
-                    c = new Color(170,200,255);
-                    prp.setProperty("color", "lightBlue");
+                case "black":
+                    c = new Color(40,40,40);
+                    txtColor = new Color(255, 255, 255);
+                    jButton1.setIcon((ImageIcon) im.ini("black/stop_s.png"));
+                    jButton2.setIcon((ImageIcon) im.ini("black/back_s.png"));
+                    jButton3.setIcon((ImageIcon) im.ini("black/next_s.png"));
+                    jButton4.setIcon((ImageIcon) im.ini("black/unmute.png"));
+                    prp.setProperty("color", "black");
+                    Color = "black";
                     break;
                 default:
                     c = new Color(240,240,240);
+                    txtColor = new Color(0,0,0);
+                    jButton1.setIcon((ImageIcon) im.ini("white/stop_s.png"));
+                    jButton2.setIcon((ImageIcon) im.ini("white/back_s.png"));
+                    jButton3.setIcon((ImageIcon) im.ini("white/next_s.png"));
+                    jButton4.setIcon((ImageIcon) im.ini("white/unmute.png"));
                     prp.setProperty("color", "white");
+                    Color = "white";
                     break;
             }
+            //Background Color
             this.getContentPane().setBackground(c);
             this.jPanel1.setBackground(c);
             gui.jTextArea_song_author.setBackground(c);
             gui.jTextField1.setBackground(c);
             gui.jTree1.setBackground(c);
+            
+            //jTree bg color
             final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)(gui.jTree1.getCellRenderer());
             renderer.setBackgroundNonSelectionColor(c);
+            
             //renderer.setBackgroundSelectionColor(Color.ORANGE);
-            //renderer.setTextNonSelectionColor(Color.RED);
             //renderer.setTextSelectionColor(Color.BLUE);
+            
+            //Text Color
+            gui.jTextArea_song_author.setForeground(txtColor);
+            gui.jTextField1.setForeground(txtColor);
+            gui.jLabel1.setForeground(txtColor);
+            gui.jLabel2.setForeground(txtColor);
+            gui.jLabel3.setForeground(txtColor);
+            gui.jLabel4.setForeground(txtColor);
+            gui.jLabel5.setForeground(txtColor);
+            gui.jLabel6.setForeground(txtColor);
+            gui.jLabel_next_song_name.setForeground(txtColor);
+            gui.jLabel_song_album.setForeground(txtColor);
+            gui.jLabel_song_duration.setForeground(txtColor);
+            gui.jLabel_song_group.setForeground(txtColor);
+            gui.jLabel_song_name.setForeground(txtColor);
+            
+            //jTree txt color
+            renderer.setTextNonSelectionColor(txtColor);
             ConfigFiles cf = new ConfigFiles();
             cf.updateFile("color", prp, "GUI skin color.");
+            
+            switchPlayPauseIcons();
+            
         }
     }
     
@@ -523,7 +563,7 @@ public class gui extends javax.swing.JFrame {
                     jRadioButtonMenuItemEN.setSelected(false);
                     jMenu1.setText("Idioma");
                     jMenu2.setText("Ayuda");
-                    jMenuItem2.setText("Azul Claro");
+                    jMenuItem2.setText("Negro");
                     jMenuItem3.setText("Blanco");
                     jMenuItem1.setText("Acerca de SpotiFake");
                     break;
@@ -532,7 +572,7 @@ public class gui extends javax.swing.JFrame {
                     jRadioButtonMenuItemEN.setSelected(true);
                     jMenu1.setText("Language");
                     jMenu2.setText("Help");
-                    jMenuItem2.setText("LightBlue");
+                    jMenuItem2.setText("Black");
                     jMenuItem3.setText("White");
                     jMenuItem1.setText("About SpotiFake");
                     break;
@@ -576,6 +616,27 @@ public class gui extends javax.swing.JFrame {
         
     }
     
+    public static void switchPlayPauseIcons(){
+        switch(Color){
+            case "black":
+                if(ply.isPlaying()){
+                    jToggleButton1.setIcon((ImageIcon) im.ini("black/pause_s.png"));
+                }else{
+                    jToggleButton1.setIcon((ImageIcon) im.ini("black/play_s.png"));
+                }
+                break;
+            case "white":
+                if(ply.isPlaying()){
+                    jToggleButton1.setIcon((ImageIcon) im.ini("white/pause_s.png"));
+                    ply.play_song();
+                }else{
+                    jToggleButton1.setIcon((ImageIcon) im.ini("white/play_s.png"));
+                    ply.pause_song();
+                }
+                break;
+        }
+    }
+    
     /**
      * 
      * Play the next song.
@@ -584,6 +645,7 @@ public class gui extends javax.swing.JFrame {
         if(current_song_id != st_canciones.size()){
             try {
                 ply.set_song_remote(st_canciones.get(current_song_id).getUrl());
+                switchPlayPauseIcons();
                 jLabel_song_name.setText(st_canciones.get(current_song_id).getNombre());
                 
                 jLabel_album_img.setIcon(new db().get_disco_img(st_canciones.get(current_song_id).getId_disco()));
@@ -596,7 +658,6 @@ public class gui extends javax.swing.JFrame {
             load_clicked_song();
         }
     }
-    
     /**
      * 
      * @return The name of the next song
@@ -627,6 +688,7 @@ public class gui extends javax.swing.JFrame {
             //Play clicked song
             Cancion c = new db().get_cancion(sel_id);
             ply.set_song_remote(c.getUrl());
+            switchPlayPauseIcons();
             load_data(c);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(gui.class.getName()).log(Level.SEVERE, null, ex);
@@ -696,23 +758,21 @@ public class gui extends javax.swing.JFrame {
     //EVENTS INI _______________________________________________________________
     //Play/Pause
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        if(jToggleButton1.isSelected() == true)
-        {
-            jToggleButton1.setIcon((ImageIcon) im.ini("pause_s.png"));
+        if(jToggleButton1.isSelected() == true){
             ply.play_song();
-        }
-        else
-        {
-            jToggleButton1.setIcon((ImageIcon) im.ini("play_s.png"));
+        }else{
             ply.pause_song();
         }
+        switchPlayPauseIcons();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
-
+    
+    
     //Previous song
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if(current_song_id != 1){
             try {
                 ply.set_song_remote(st_canciones.get(current_song_id-2).getUrl());
+                switchPlayPauseIcons();
                 jLabel_song_name.setText(st_canciones.get(current_song_id-2).getNombre());
                 
                 jLabel_album_img.setIcon(new db().get_disco_img(st_canciones.get(current_song_id-2).getId_disco()));
@@ -730,6 +790,15 @@ public class gui extends javax.swing.JFrame {
     //Stop
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ply.stop_song();
+        switch(Color){
+            case "black":
+                gui.jToggleButton1.setIcon((ImageIcon) im.ini("black/play_s.png"));
+                break;
+            case "white":
+                gui.jToggleButton1.setIcon((ImageIcon) im.ini("white/play_s.png"));
+                break;
+        }
+        gui.jToggleButton1.setSelected(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     //Next song
@@ -745,14 +814,30 @@ public class gui extends javax.swing.JFrame {
 
     //Mute
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        ply.mute();
+        boolean mute = ply.mute();
+        switch(Color){
+            case "black":
+                if(mute){
+                    gui.jButton4.setIcon((ImageIcon) im.ini("black/mute.png"));
+                }else{
+                    gui.jButton4.setIcon((ImageIcon) im.ini("black/unmute.png"));
+                }
+                break;
+            case "white":
+                if(mute){
+                    gui.jButton4.setIcon((ImageIcon) im.ini("white/mute.png"));
+                }else{
+                    gui.jButton4.setIcon((ImageIcon) im.ini("white/unmute.png"));
+                }
+                break;
+            
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     //Tree panel
     private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
         // TODO add your handling code here:
         String str1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
-        System.out.println("\nComboBox: " + str1);
         TreePath tp = null;
         try{
             tp = jTree1.getSelectionPath().getParentPath();
@@ -830,7 +915,6 @@ public class gui extends javax.swing.JFrame {
             jTextField1.setText(jTFSearch);
 
             String s = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
-            System.out.println("\nComboBox: " + s);
             clear_tree();
             if(s.equals(combo[0])){
                 new Dao_canciones().fill_song_names();
@@ -933,13 +1017,15 @@ public class gui extends javax.swing.JFrame {
             cf.updateFile("LANG", loadFile, "Language configuration.");
         }
     }//GEN-LAST:event_jRadioButtonMenuItemENActionPerformed
-
+    public static String Color;
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        setColor("lightBlue");
+        setColor("black");
+        Color = "black";
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         setColor("white");
+        Color = "white";
     }//GEN-LAST:event_jMenuItem3ActionPerformed
     
     

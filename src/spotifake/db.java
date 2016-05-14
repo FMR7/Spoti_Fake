@@ -37,6 +37,9 @@ public class db {
     private String host , port, database, user, pass;
     private String dbConnection;
     
+    private String songsFolder;
+    private String imgsFolder;
+    
     Connection conexion;
     PreparedStatement s;
     ResultSet rs;
@@ -70,7 +73,17 @@ public class db {
         }
         try {
             Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
+            conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
+            s = conexion.prepareStatement("select h.songsFolder, h.imgsFolder from hostfolders h");
+            rs = s.executeQuery();
+
+            while(rs.next())
+            {
+                songsFolder = rs.getString(1);
+                imgsFolder = rs.getString(2);
+            }
+            
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(db.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -91,7 +104,7 @@ public class db {
 
             while(rs.next())
             {
-                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), songsFolder + rs.getString(4), rs.getInt(5), rs.getString(6)));
             }
             
             rs.close();
@@ -123,7 +136,7 @@ public class db {
 
             while(rs.next())
             {
-                c = (new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+                c = (new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), songsFolder + rs.getString(4), rs.getInt(5), rs.getString(6)));
             }
             
             rs.close();
@@ -153,7 +166,7 @@ public class db {
 
             while(rs.next())
             {
-                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), songsFolder + rs.getString(4), rs.getInt(5), rs.getString(6)));
             }
             
             rs.close();
@@ -182,7 +195,7 @@ public class db {
 
             while(rs.next())
             {
-                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), songsFolder + rs.getString(4), rs.getInt(5), rs.getString(6)));
             }
             
             rs.close();
@@ -213,7 +226,7 @@ public class db {
 
             while(rs.next())
             {
-                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), songsFolder + rs.getString(4), rs.getInt(5), rs.getString(6)));
             }
             
             rs.close();
@@ -302,13 +315,13 @@ public class db {
         
         try{
             conexion = DriverManager.getConnection(this.dbConnection, this.user, this.pass);
-            s = conexion.prepareStatement("select * from v_discos_grupo where id_grupo = ?");
+            s = conexion.prepareStatement("select id, nombre, fecha, url_img from v_discos_grupo where id_grupo = ?");
             s.setInt(1, id_grupo);
             rs = s.executeQuery();
 
             while(rs.next())
             {
-                d.add(new Disco(rs.getInt(1), rs.getString(2), rs.getDate(3), rs.getString(4)));
+                d.add(new Disco(rs.getInt(1), rs.getString(2), rs.getDate(3), imgsFolder + rs.getString(4)));
             }
             
             rs.close();
@@ -338,7 +351,7 @@ public class db {
 
             while(rs.next())
             {
-                d.add(new Disco(rs.getInt(1), rs.getString(2), rs.getDate(3), rs.getString(4)));
+                d.add(new Disco(rs.getInt(1), rs.getString(2), rs.getDate(3), imgsFolder + rs.getString(4)));
             }
             
             rs.close();
@@ -370,9 +383,9 @@ public class db {
 
             while(rs.next())
             {
-                url = rs.getString(1);
+                url = imgsFolder + rs.getString(1);
             }
-            
+            System.out.println(url);
             if(!"".equals(url)){
                 URL url1 = new URL(url);
                 BufferedImage img = ImageIO.read(url1);
@@ -545,7 +558,7 @@ public class db {
 
             while(rs.next())
             {
-                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), rs.getString(4), rs.getInt(5), rs.getString(6)));
+                c.add(new Cancion(rs.getInt(1),rs.getString(2), rs.getInt(3), songsFolder + rs.getString(4), rs.getInt(5), rs.getString(6)));
             }
             
             rs.close();
@@ -577,7 +590,7 @@ public class db {
 
             while(rs.next())
             {
-                d.add(new Disco(rs.getInt(1), rs.getString(2), rs.getDate(3), rs.getString(4)));
+                d.add(new Disco(rs.getInt(1), rs.getString(2), rs.getDate(3), imgsFolder + rs.getString(4)));
             }
             
             rs.close();

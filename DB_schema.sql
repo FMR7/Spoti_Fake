@@ -1,6 +1,6 @@
 -- MySQL dump 10.16  Distrib 10.1.9-MariaDB, for Win32 (AMD64)
 --
--- Host: 127.0.0.1    Database: musica
+-- Host: localhost    Database: musica
 -- ------------------------------------------------------
 -- Server version	10.1.9-MariaDB
 
@@ -116,6 +116,21 @@ CREATE TABLE `grupos_discos` (
   `id_grupo` int(11) NOT NULL,
   `id_disco` int(40) NOT NULL,
   PRIMARY KEY (`id_grupo`,`id_disco`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `hostfolders`
+--
+
+DROP TABLE IF EXISTS `hostfolders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hostfolders` (
+  `songsFolder` varchar(255) NOT NULL,
+  `imgsFolder` varchar(255) NOT NULL,
+  `host` varchar(255) NOT NULL,
+  PRIMARY KEY (`host`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -375,4 +390,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-23 17:37:27
+-- Dump completed on 2016-05-14 19:28:34
