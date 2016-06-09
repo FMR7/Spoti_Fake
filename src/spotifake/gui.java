@@ -70,20 +70,20 @@ public class gui extends javax.swing.JFrame {
             Properties newProperties = new Properties();
             newProperties.setProperty("lang", "ES");
             ConfigFiles cf = new ConfigFiles();
-            cf.newFile("LANG", newProperties, "Language configuration.");
-            Properties loadFile = cf.loadFile("LANG", debug);
+            cf.newFile("conf\\" + "LANG", newProperties, "Language configuration.");
+            Properties loadFile = cf.loadFile("conf\\" + "LANG", debug);
             loadLang(loadFile.getProperty("lang"));
             jComboBox1.setSelectedIndex(0);
             
             //-GUI color
             newProperties.clear();
-            newProperties.setProperty("color", "white");
-            cf.newFile("color", newProperties, "GUI skin color.");
-            Properties loadFile1 = cf.loadFile("color");
+            newProperties.setProperty("color", "light");
+            cf.newFile("conf\\" + "color", newProperties, "GUI skin color.");
+            Properties loadFile1 = cf.loadFile("conf\\" + "color");
             String color = loadFile1.getProperty("color");
             Color = color;
             setColor(color);
-            
+
         } catch (Exception ex) {
             System.out.println("WARNING CAN'T LOAD RESOURCES");
         }
@@ -360,7 +360,7 @@ public class gui extends javax.swing.JFrame {
 
         jMenu3.setText("Color");
 
-        jMenuItem2.setText("Black");
+        jMenuItem2.setText("Dark");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -368,7 +368,7 @@ public class gui extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem2);
 
-        jMenuItem3.setText("White");
+        jMenuItem3.setText("Light");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -451,7 +451,7 @@ public class gui extends javax.swing.JFrame {
     private static String[] combo;
     
     private void setColor(String bgColor){
-        Color txtColor = new Color(0,0,0);
+        Color txtColor;
         //Icons
         jButton1.setOpaque(false);
         jButton1.setContentAreaFilled(false);
@@ -478,25 +478,25 @@ public class gui extends javax.swing.JFrame {
             Color c;
             Properties prp = new Properties();
             switch(bgColor){
-                case "white":
+                case "light":
                     c = new Color(240,240,240);
                     txtColor = new Color(0,0,0);
                     jButton1.setIcon((ImageIcon) im.ini("white/stop_s.png"));
                     jButton2.setIcon((ImageIcon) im.ini("white/back_s.png"));
                     jButton3.setIcon((ImageIcon) im.ini("white/next_s.png"));
                     jButton4.setIcon((ImageIcon) im.ini("white/unmute.png"));
-                    prp.setProperty("color", "white");
-                    Color = "white";
+                    prp.setProperty("color", "light");
+                    Color = "light";
                     break;
-                case "black":
+                case "dark":
                     c = new Color(40,40,40);
                     txtColor = new Color(255, 255, 255);
                     jButton1.setIcon((ImageIcon) im.ini("black/stop_s.png"));
                     jButton2.setIcon((ImageIcon) im.ini("black/back_s.png"));
                     jButton3.setIcon((ImageIcon) im.ini("black/next_s.png"));
                     jButton4.setIcon((ImageIcon) im.ini("black/unmute.png"));
-                    prp.setProperty("color", "black");
-                    Color = "black";
+                    prp.setProperty("color", "dark");
+                    Color = "dark";
                     break;
                 default:
                     c = new Color(240,240,240);
@@ -505,8 +505,8 @@ public class gui extends javax.swing.JFrame {
                     jButton2.setIcon((ImageIcon) im.ini("white/back_s.png"));
                     jButton3.setIcon((ImageIcon) im.ini("white/next_s.png"));
                     jButton4.setIcon((ImageIcon) im.ini("white/unmute.png"));
-                    prp.setProperty("color", "white");
-                    Color = "white";
+                    prp.setProperty("color", "light");
+                    Color = "light";
                     break;
             }
             //Background Color
@@ -541,7 +541,7 @@ public class gui extends javax.swing.JFrame {
             //jTree txt color
             renderer.setTextNonSelectionColor(txtColor);
             ConfigFiles cf = new ConfigFiles();
-            cf.updateFile("color", prp, "GUI skin color.");
+            cf.updateFile("conf\\" + "color", prp, "GUI skin color.");
             
             switchPlayPauseIcons();
             
@@ -556,15 +556,15 @@ public class gui extends javax.swing.JFrame {
     private static void loadLang(String lang){
         if(!"".equals(lang)){
             ConfigFiles cf = new ConfigFiles();
-            Properties loadFile = cf.loadFile(lang, debug);
+            Properties loadFile = cf.loadFile("lang\\" + lang, debug);
             switch(lang){
                 case "ES":
                     jRadioButtonMenuItemES.setSelected(true);
                     jRadioButtonMenuItemEN.setSelected(false);
                     jMenu1.setText("Idioma");
                     jMenu2.setText("Ayuda");
-                    jMenuItem2.setText("Negro");
-                    jMenuItem3.setText("Blanco");
+                    jMenuItem2.setText("Oscuro");
+                    jMenuItem3.setText("Claro");
                     jMenuItem1.setText("Acerca de SpotiFake");
                     break;
                 case "EN":
@@ -572,8 +572,8 @@ public class gui extends javax.swing.JFrame {
                     jRadioButtonMenuItemEN.setSelected(true);
                     jMenu1.setText("Language");
                     jMenu2.setText("Help");
-                    jMenuItem2.setText("Black");
-                    jMenuItem3.setText("White");
+                    jMenuItem2.setText("Dark");
+                    jMenuItem3.setText("Light");
                     jMenuItem1.setText("About SpotiFake");
                     break;
                 default:
@@ -618,14 +618,14 @@ public class gui extends javax.swing.JFrame {
     
     public static void switchPlayPauseIcons(){
         switch(Color){
-            case "black":
+            case "dark":
                 if(ply.isPlaying()){
                     jToggleButton1.setIcon((ImageIcon) im.ini("black/pause_s.png"));
                 }else{
                     jToggleButton1.setIcon((ImageIcon) im.ini("black/play_s.png"));
                 }
                 break;
-            case "white":
+            case "light":
                 if(ply.isPlaying()){
                     jToggleButton1.setIcon((ImageIcon) im.ini("white/pause_s.png"));
                     ply.play_song();
@@ -791,10 +791,10 @@ public class gui extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ply.stop_song();
         switch(Color){
-            case "black":
+            case "dark":
                 gui.jToggleButton1.setIcon((ImageIcon) im.ini("black/play_s.png"));
                 break;
-            case "white":
+            case "light":
                 gui.jToggleButton1.setIcon((ImageIcon) im.ini("white/play_s.png"));
                 break;
         }
@@ -816,14 +816,14 @@ public class gui extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         boolean mute = ply.mute();
         switch(Color){
-            case "black":
+            case "dark":
                 if(mute){
                     gui.jButton4.setIcon((ImageIcon) im.ini("black/mute.png"));
                 }else{
                     gui.jButton4.setIcon((ImageIcon) im.ini("black/unmute.png"));
                 }
                 break;
-            case "white":
+            case "light":
                 if(mute){
                     gui.jButton4.setIcon((ImageIcon) im.ini("white/mute.png"));
                 }else{
@@ -990,12 +990,12 @@ public class gui extends javax.swing.JFrame {
             jRadioButtonMenuItemEN.setSelected(false);
             loadLang("ES");
             loadFile.setProperty("lang", "ES");
-            cf.updateFile("LANG", loadFile, "Language configuration.");
+            cf.updateFile("conf\\" + "LANG", loadFile, "Language configuration.");
         }else{
             jRadioButtonMenuItemEN.setSelected(true);
             loadLang("EN");
             loadFile.setProperty("lang", "EN");
-            cf.updateFile("LANG", loadFile, "Language configuration.");
+            cf.updateFile("conf\\" + "LANG", loadFile, "Language configuration.");
         }
         
     }//GEN-LAST:event_jRadioButtonMenuItemESActionPerformed
@@ -1009,23 +1009,23 @@ public class gui extends javax.swing.JFrame {
             jRadioButtonMenuItemES.setSelected(false);
             loadLang("EN");
             loadFile.setProperty("lang", "EN");
-            cf.updateFile("LANG", loadFile, "Language configuration.");
+            cf.updateFile("conf\\" + "LANG", loadFile, "Language configuration.");
         }else{
             jRadioButtonMenuItemES.setSelected(true);
             loadLang("ES");
             loadFile.setProperty("lang", "ES");
-            cf.updateFile("LANG", loadFile, "Language configuration.");
+            cf.updateFile("conf\\" + "LANG", loadFile, "Language configuration.");
         }
     }//GEN-LAST:event_jRadioButtonMenuItemENActionPerformed
     public static String Color;
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        setColor("black");
-        Color = "black";
+        setColor("dark");
+        Color = "dark";
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        setColor("white");
-        Color = "white";
+        setColor("light");
+        Color = "light";
     }//GEN-LAST:event_jMenuItem3ActionPerformed
     
     

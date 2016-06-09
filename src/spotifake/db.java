@@ -57,9 +57,9 @@ public class db {
         newProperties.setProperty("PASS", "");
 
         ConfigFiles cf = new ConfigFiles();
-        cf.newFile("DB_Data", newProperties, "Database connection data.");
+        cf.newFile("conf\\" + "DB_Data", newProperties, "Database connection data.");
 
-        Properties loadFile = cf.loadFile("DB_Data", true);
+        Properties loadFile = cf.loadFile("conf\\" + "DB_Data", true);
         if(loadFile != null){
             this.host = loadFile.getProperty("HOST");
             this.port = loadFile.getProperty("PORT");
