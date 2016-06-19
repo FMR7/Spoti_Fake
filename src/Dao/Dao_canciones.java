@@ -37,7 +37,7 @@ public class Dao_canciones {
      */
     public Dao_canciones(String name, int n) {
         ConfigFiles cf = new ConfigFiles();
-        Properties loadFile = cf.loadFile("LANG", true);
+        Properties loadFile = cf.loadFile("conf\\" + "LANG", true);
         String lang = loadFile.getProperty("lang");
         switch (n){
             case 1:

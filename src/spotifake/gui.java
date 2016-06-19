@@ -985,7 +985,7 @@ public class gui extends javax.swing.JFrame {
     private void jRadioButtonMenuItemESActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItemESActionPerformed
         // TODO add your handling code here:
         ConfigFiles cf = new ConfigFiles();
-        Properties loadFile = cf.loadFile("LANG", debug);
+        Properties loadFile = cf.loadFile("conf\\" + "LANG", debug);
         if(jRadioButtonMenuItemES.isSelected()){
             jRadioButtonMenuItemEN.setSelected(false);
             loadLang("ES");
@@ -1004,7 +1004,7 @@ public class gui extends javax.swing.JFrame {
     private void jRadioButtonMenuItemENActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItemENActionPerformed
         // TODO add your handling code here:
         ConfigFiles cf = new ConfigFiles();
-        Properties loadFile = cf.loadFile("LANG", debug);
+        Properties loadFile = cf.loadFile("conf\\" + "LANG", debug);
         if(jRadioButtonMenuItemEN.isSelected()){
             jRadioButtonMenuItemES.setSelected(false);
             loadLang("EN");
