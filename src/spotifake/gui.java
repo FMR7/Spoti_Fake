@@ -14,7 +14,6 @@ import fmr.persistence.ConfigFiles;
 
 import java.awt.Color;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -44,11 +43,8 @@ public class gui extends javax.swing.JFrame {
     public static boolean showing_songs = false;
     public static boolean showing_autores = false;
     
-    private static final boolean debug = true;
-    private static img im = new img();
-    
-    private String track_list[]; //array de strings con las direcciones de las canciones
-    private List<String> urls = new ArrayList<>();
+    private static final boolean debug = false;
+    private static final img im = new img();
     
     public static Player ply;
     
@@ -59,9 +55,10 @@ public class gui extends javax.swing.JFrame {
     public gui() {
         
         initComponents();
+        this.setLocationRelativeTo(null);
         
         try {
-            setIconImage(getToolkit().getImage(getClass().getResource("/resources/icons/black/play_s.png")));
+            setIconImage(getToolkit().getImage(getClass().getResource("/resources/icons/black/music.png")));
             
             gui.ply = new Player();
             
@@ -646,9 +643,6 @@ public class gui extends javax.swing.JFrame {
             try {
                 ply.set_song_remote(st_canciones.get(current_song_id).getUrl());
                 switchPlayPauseIcons();
-                jLabel_song_name.setText(st_canciones.get(current_song_id).getNombre());
-                
-                jLabel_album_img.setIcon(new db().get_disco_img(st_canciones.get(current_song_id).getId_disco()));
                 
                 current_song_id = current_song_id+1;
                 jTree1.setSelectionRow(current_song_id);
@@ -809,7 +803,7 @@ public class gui extends javax.swing.JFrame {
     //About
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        
+        new about().setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     //Mute
